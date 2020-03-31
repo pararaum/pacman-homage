@@ -1,0 +1,3 @@
+[submodule "c64playground"]
+	path = c64playground
+	url = git@github.com:pararaum/c64playground.git
