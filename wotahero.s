@@ -25,7 +25,8 @@ tmpptr:	.word	0
 	sta	$1
 	jsr	*
 	jmp	64738
-	
+	.BYTE	"THE 7TH DIVISION"
+	.byte $14,$08,$05,$20,$37,$14,$08,$20,$04,$09,$16,$09,$13,$09,$0f,$0e
 
 	.rodata
 	.byte	"Read Only Data (SID)"
