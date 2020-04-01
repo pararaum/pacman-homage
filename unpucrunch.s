@@ -4,10 +4,6 @@
 ;			223 bytes
 
 SHORT = 0	;1	; assume file is ok
-IRQLOAD = 0	;1
-
-
-
 
 LZPOS	= $9e		; 2 ZeroPage temporaries
 bitstr	= $fb		; 1 temporary (does not need to be ZP)
@@ -23,13 +19,9 @@ bitstr	= $fb		; 1 temporary (does not need to be ZP)
 	lda #$35
 	sta 1
 	.endif
-	.if IRQLOAD
-	;jsr initloader
-	.else
 	; Setup read pointer
 	sty INPOS
 	stx INPOS+1
-	.endif
 
 	.if SHORT
 	ldx #5
@@ -189,17 +181,9 @@ eof2:	lda #$37
 	sta 1
 	cli
 	.endif
-	.if IRQLOAD
-	;jsr endloader
-lo = .+1
-hi = .+2
-	jmp $aaaa
-	.else
 hi:	ldx #0
 lo:	ldy #0
 	rts
-	.endif
-
 
 noeof:	sbc #0		; C is clear -> subtract 1  (1..126 -> 0..125)
 elzpb:	ldx #0		; ** PARAMETER (more bits to get)
@@ -229,17 +213,11 @@ lzloop:	lda (LZPOS),y	; using abs,y is 3 bytes longer, only 1 cycle/byte faster
 
 getnew:	pha		; 1 Byte/3 cycles
 
-	.if IRQLOAD
-	;jsr READBYTE	; should not change X or Y, return byte in A
-	; An implementation would first check if any bytes are available
-	; and if not, transfer a block from drive.
-	.else
 INPOS = *+1
 	lda $aaaa	; ** PARAMETER
 	inc INPOS
 	bne @l0
 	inc INPOS+1
-	.endif
 @l0:	sec
 	rol		; Shift out the next bit and
 			;  shift in C=1 (last bit marker)
