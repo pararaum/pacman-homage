@@ -1,3 +1,6 @@
 [submodule "c64playground"]
 	path = c64playground
 	url = git@github.com:pararaum/c64playground.git
+[submodule "pucrunch"]
+	path = pucrunch
+	url = git@github.com:pararaum/pucrunch.git

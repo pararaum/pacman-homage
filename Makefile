@@ -2,7 +2,7 @@
 ##echo $(shell pgrep -f "x64.*-remotemonitor" || x64 -remotemonitor )&
 
 AFLAGS=-I includeCC65
-OBJS = wotahero.o muzak.o
+OBJS = wotahero.o muzak.o unpucrunch.o
 
 all:	wotahero
 
