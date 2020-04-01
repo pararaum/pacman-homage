@@ -2,13 +2,14 @@
 ##echo $(shell pgrep -f "x64.*-remotemonitor" || x64 -remotemonitor )&
 
 AFLAGS=-I includeCC65
+OBJS = wotahero.o muzak.o
 
 all:	wotahero
 
 %.o:	%.s
 	ca65 $(AFLAGS) $+
 
-wotahero:	wotahero.o
+wotahero:	$(OBJS)
 	cl65 $(CFLAGS) -v -C wotahero.cfg $+
 
 clean:
