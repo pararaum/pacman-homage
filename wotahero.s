@@ -49,6 +49,18 @@ _main:
 	jsr	init
 	jsr	cpyimage
 	cli
+mainloop:
+	sei
+	lda	$1		; Store old memory configuration
+	pha
+	lda	#$35		; I/O on
+	sta	$1
+	lda	$dc06
+	sta	$d020
+	pla			; Resotre old configuration.
+	sta	$1
+	cli
+	jsr	mainloop
 	rts
 
 irqroutine:
@@ -127,6 +139,13 @@ init:
 	SetBitmapAddress $2000
 	SetScreenMemory $1c00
 	jsr	sidMuzakInit
+	lda	#0
+	sta	$dc0f
+	lda	#$ff
+	sta	$dc07
+	sta	$dc06
+	lda	#%01010011
+	sta	$dc0f
 	lda	#$30
 	sta	$1
 	rts
