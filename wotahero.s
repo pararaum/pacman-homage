@@ -22,6 +22,8 @@ srcptr:	.word	0
 dstptr:	.word	0
 srcend:	.word	0
 tmpptr:	.word	0
+irqXsave:	.byte 0
+irqYsave:	.byte 0
 
 	.segment "STARTUP"
 	cld
@@ -30,7 +32,6 @@ tmpptr:	.word	0
 	ldx	#$ff
 	txs
 	jsr	_main
-	jsr	*
 	lda	#$37
 	sta	$1
 	jmp	64738
@@ -69,10 +70,15 @@ mainloop:
 	pla			; Resotre old configuration.
 	sta	$1
 	cli
-	jsr	mainloop
+	lda	#$34		; End after n*256 frames.
+	cmp	framecounter+1
+	bne	mainloop
 	rts
 
 irqroutine:
+	pha
+	stx	irqXsave
+	sty	irqYsave
 	lda	#$37		; Turn on I/O
 	sta	$1
 	;; 	inc	$d020
@@ -81,6 +87,9 @@ irqroutine:
 	asl	$d019
 	lda	#$30		; Turn to RAM only
 	sta	$1
+	ldy	irqYsave
+	ldx	irqXsave
+	pla
 	rti
 
 setupirq:
