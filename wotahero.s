@@ -3,6 +3,9 @@
 
 	.include	"vicmacros.i"
 	.include	"pseudo16.inc"
+	.macpack	longbranch
+	.macpack	cbm
+	.macpack	generic
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -10,8 +13,10 @@
 	.exportzp	tmpptr
 	.export _main
 	.export	framecounter
+	.export ciatimercopy
 
 	.import	sidmusic
+	.import unpucrunch
 
 	.segment "LOADADDR"
 	.export __LOADADDR__
@@ -22,18 +27,33 @@ srcptr:	.word	0
 dstptr:	.word	0
 srcend:	.word	0
 tmpptr:	.word	0
+counter16:	.word 0
 irqXsave:	.byte 0
 irqYsave:	.byte 0
 
 	.segment "IMAGE"
-	.asciiz	"image"
+screen0:
+	.res	1024
+screen1:
+	.res	1024
+sprites:
+	.res	64*16		; 1024
+imagecolours:
+	.res	1024
+
 
 	.bss
 framecounter:	.word 0
+ciatimercopy:	.dword 0
 
 	.data
 image_iwatani:
 	.incbin	"toru_iwatani.bw.c64"
+image_cr_story00:
+	.incbin	"story.00.pucr",2
+image_cr_iwatani:
+	.incbin	"toru_iwatani.bw.pucr",2
+
 
 	.code
 _main:
@@ -52,14 +72,73 @@ mainloop:
 	pha
 	lda	#$35		; I/O on
 	sta	$1
-	lda	$dc06
-	sta	$d020
+	inc	$d020
 	pla			; Resotre old configuration.
 	sta	$1
 	cli
+	;; 
+	lda	#$1
+	jsr	wait_for_framecounter
+	;inc	imagecolours
+	;inc	$e000
+	;;
+	lda	#$2
+	jsr	wait_for_framecounter
+	ldx	#>image_cr_story00
+	ldy	#<image_cr_story00
+	jsr	unpucrunch
+	nop
+	ldy	#0
+	;;
+	P_loadi	srcptr,$d400+8000+1000
+	P_loadi	dstptr,$d000+1000
+	P_loadi counter16,1000+1
+imageloop2:
+	lda	(srcptr),y
+	sta	(dstptr),y
+	P_dec	srcptr
+	P_dec	dstptr
+	P_dec	counter16
+	P_branchNZ counter16,imageloop2
+	;; 
+	P_loadi	srcptr,$d400+8000
+	P_loadi	dstptr,$e000+8000
+	P_loadi counter16,8000+1
+imageloop1:
+	lda	(srcptr),y
+	sta	(dstptr),y
+	P_dec	srcptr
+	P_dec	dstptr
+	P_dec	counter16
+	P_branchNZ counter16,imageloop1
+	;;
+	P_loadi	srcptr,$d000+1000
+	P_loadi	dstptr,$dc00+1000
+	P_loadi counter16,1000+1
+imageloop3:
+	lda	(srcptr),y
+	sta	(dstptr),y
+	P_dec	srcptr
+	P_dec	dstptr
+	P_dec	counter16
+	P_branchNZ counter16,imageloop3
+	nop
+	;; 
 	lda	#$34		; End after n*256 frames.
 	cmp	framecounter+1
-	bne	mainloop
+	jne	mainloop
+	rts
+
+;;; Wait until the framecounter reaches a value, clear to zero afterwards. Only high byte!
+;;; Input:
+;;;	A: High value to wait for
+;;; Modifies: A
+;;; Returns: A=0
+wait_for_framecounter:
+@l1:	cmp	framecounter+1
+	bne	@l1
+	lda	#0
+	sta	framecounter+1
 	rts
 
 irqroutine:
@@ -70,7 +149,13 @@ irqroutine:
 	sta	$1
 	;; 	inc	$d020
 	jsr	$1003
-	P_inc	framecounter
+	P_inc	framecounter	; Advance frame counter.
+	;; Copy the current timer information.
+	ldx	#3
+@l1:	lda	$dc04,x
+	sta	ciatimercopy,x
+	dex
+	bpl	@l1
 	asl	$d019
 	lda	#$30		; Turn to RAM only
 	sta	$1

@@ -13,15 +13,10 @@ bitstr:	.byte 0		; 1 temporary (does not need to be ZP)
 
 
 	.code
-unpucrunch:
 	; Call with X = HI of packed data, Y = LO of packed data
 	; Returns exec address in X = HI and Y = LO
 	; Carry will be set for error, cleared for OK
-	.if SHORT = 0
-	sei
-	lda #$35
-	sta 1
-	.endif
+unpucrunch:
 	; Setup read pointer
 	sty INPOS
 	stx INPOS+1
@@ -177,13 +172,8 @@ lz77:	jsr getval	; X = 0
 mg21:	cmp #127	; ** PARAMETER	Clears carry (is maximum value)
 	bne noeof
 	; EOF
-eof:	
-	.if SHORT = 0
-	clc
-eof2:	lda #$37
-	sta 1
-	cli
-	.endif
+eof:
+eof2:
 hi:	ldx #0
 lo:	ldy #0
 	rts

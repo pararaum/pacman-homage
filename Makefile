@@ -4,7 +4,7 @@
 AFLAGS=-I includeCC65
 OBJS = wotahero.o muzak.o unpucrunch.o startup.o
 
-all:	wotahero putest images
+all:	images wotahero putest
 
 %.o:	%.s
 	ca65 $(AFLAGS) $+
@@ -16,9 +16,9 @@ putest:	unpucrunch.o putest.o
 	cl65 -v -t c64 -o $@ $+
 
 %.pucr:	%.c64
-	./pucrunch/pucrunch -c0 -d -l 56344 $+ $@
+	./pucrunch/pucrunch -c0 -d -l 54272 $+ $@
 
-images:	story.00.pucr
+images:	story.00.pucr toru_iwatani.bw.pucr
 
 clean:
 	rm -f wotahero wotahero.map wotahero.vicelabel putest *.o *.pucr
