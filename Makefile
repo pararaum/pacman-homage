@@ -10,13 +10,13 @@ all:	wotahero putest
 	ca65 $(AFLAGS) $+
 
 wotahero:	$(OBJS)
-	cl65 $(CFLAGS) -v -C wotahero.cfg $+
+	cl65 $(CFLAGS) -v -m wotahero.map -Ln wotahero.vicelabel -C wotahero.cfg $+
 
 putest:	unpucrunch.o putest.o
 	cl65 -v -t c64 -o $@ $+
 
 clean:
-	rm -f wotahero putest *.o
+	rm -f wotahero wotahero.map wotahero.vicelabel putest *.o
 
 run:	wotahero
 	@echo  '\nbank ram \nl "wotahero" 0 \ng 0400\n' | nc -N localhost 6510

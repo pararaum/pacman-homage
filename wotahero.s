@@ -7,6 +7,10 @@
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
 
+	.exportzp	tmpptr
+	.export _main
+	.export	framecounter
+
 	.import	sidmusic
 
 	.segment "LOADADDR"
@@ -36,6 +40,8 @@ tmpptr:	.word	0
 	.segment "IMAGE"
 	.asciiz	"image"
 
+	.bss
+framecounter:	.word 0
 
 	.data
 image_iwatani:
@@ -48,6 +54,9 @@ _main:
 	jsr	setupirq
 	jsr	init
 	jsr	cpyimage
+	lda	#0
+	sta	framecounter
+	sta	framecounter+1
 	cli
 mainloop:
 	sei
@@ -68,6 +77,7 @@ irqroutine:
 	sta	$1
 	;; 	inc	$d020
 	jsr	$1003
+	P_inc	framecounter
 	asl	$d019
 	lda	#$30		; Turn to RAM only
 	sta	$1
