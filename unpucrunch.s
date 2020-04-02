@@ -3,14 +3,17 @@
 ; fixed params =~	-48 bytes -> 306
 ;			223 bytes
 
+	.export	unpucrunch
+
 SHORT = 0	;1	; assume file is ok
 
-LZPOS	= $9e		; 2 ZeroPage temporaries
-bitstr	= $fb		; 1 temporary (does not need to be ZP)
+	.zeropage
+LZPOS:	.word 0		; 2 ZeroPage temporaries
+bitstr:	.byte 0		; 1 temporary (does not need to be ZP)
 
 
-	.ORG $c000
-
+	.code
+unpucrunch:
 	; Call with X = HI of packed data, Y = LO of packed data
 	; Returns exec address in X = HI and Y = LO
 	; Carry will be set for error, cleared for OK
