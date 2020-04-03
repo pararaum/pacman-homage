@@ -79,7 +79,7 @@ mainloop:
 	sei
 	.ifndef	NDEBUG
 	pha
-	lda	#1
+	lda	$1
 	cmp	#$34
 	beq	@ok84
 	.byte	$52
