@@ -3,6 +3,8 @@
 	cld
 	cld
 	sei
+	lda	#$35		; Set to I/O only.
+	sta	$1
 	;;  Clear BSS
 	ldx	#0
 	txa

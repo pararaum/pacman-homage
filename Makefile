@@ -1,13 +1,14 @@
 #! /usr/bin/make
 ##echo $(shell pgrep -f "x64.*-remotemonitor" || x64 -remotemonitor )&
 
-AFLAGS=-I includeCC65
+AFLAGS = -DNDEBUG
+AINC = -I includeCC65
 OBJS = wotahero.o muzak.o unpucrunch.o startup.o imagemoiety.o
 
 all:	images wotahero putest
 
 %.o:	%.s
-	ca65 $(AFLAGS) $+
+	ca65 $(AINC) $(AFLAGS) $+
 
 wotahero:	$(OBJS)
 	cl65 $(CFLAGS) -v -m wotahero.map -Ln wotahero.vicelabel -C wotahero.cfg $+

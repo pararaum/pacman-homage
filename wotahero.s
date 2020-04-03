@@ -46,7 +46,13 @@ screen1:
 sprites:
 	.res	64*16		; 1024
 imagecolours:
-	.res	1024
+	;; Screen Ram, positioned in the file after the 8000 bytes of the bitmap.
+	.incbin	"toru_iwatani.bw.c64",8000,1000
+	.res	16		; Empty space
+spritepointer:
+	.res	8
+	;; Here comes the bitmap, the first 8000 bytes of the file.
+	.incbin	"toru_iwatani.bw.c64",0,8000
 
 
 	.bss
@@ -62,7 +68,8 @@ _main:
 	sta	$d020
 	jsr	setupirq
 	jsr	init
-	jsr	cpyimage
+	lda	#$34
+	sta	$1
 	lda	#0
 	sta	framecounter
 	sta	framecounter+1
@@ -70,13 +77,18 @@ _main:
 	cli
 mainloop:
 	sei
-	lda	$1		; Store old memory configuration
+	.ifndef	NDEBUG
 	pha
-	lda	#$35		; I/O on
-	sta	$1
-	inc	$d020
-	pla			; Resotre old configuration.
-	sta	$1
+	lda	#1
+	cmp	#$34
+	beq	@ok84
+	.byte	$52
+	@ok84:
+	.endif
+	inc	$1		; I/O on
+	lda	#$f
+	sta	$d020
+	dec	$1
 	cli
 	;;
 displayloop:
@@ -131,7 +143,7 @@ irqroutine:
 	dex
 	bpl	@l1
 	asl	$d019
-	lda	#$30		; Turn to RAM only
+	lda	#$34		; Turn to RAM only
 	sta	$1
 	ldy	irqYsave
 	ldx	irqXsave
@@ -172,31 +184,6 @@ setupirq:
 	sta	$d01a
 	rts
 
-cpyimage:
-	P_loadi srcend,image_iwatani+8000
-	P_loadi srcptr,image_iwatani
-	P_loadi dstptr,$e000
-	ldy	#0
-l1:	lda	(srcptr),y
-	sta	(dstptr),y
-;;; 	P_storeb srcptr,dstptr
-	P_transfer srcptr,tmpptr
-	P_inc	srcptr
-	P_inc	dstptr
-	P_sub	srcend,tmpptr
-	P_branchNZ tmpptr,l1
-	P_loadi srcend,image_iwatani+8000+1000
-	P_loadi srcptr,image_iwatani+8000
-	P_loadi dstptr,$dc00
-l2:	lda	(srcptr),y
-	sta	(dstptr),y
-	;; 	P_storeb srcptr,dstptr
-	P_transfer srcptr,tmpptr
-	P_inc	srcptr
-	P_inc	dstptr
-	P_sub	srcend,tmpptr
-	P_branchNZ tmpptr,l2
-	rts
 
 init:
 	SwitchVICBank 3
@@ -254,8 +241,6 @@ init:
 ;	registers sets the TOD clock.
 	lda	#%01010001
 	sta	$dc0f
-	lda	#$30
-	sta	$1
 	rts
 
 	;; https://www.c64-wiki.com/wiki/raster_time
