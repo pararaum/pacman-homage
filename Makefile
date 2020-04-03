@@ -5,13 +5,16 @@ AFLAGS = -DNDEBUG
 AINC = -I includeCC65
 OBJS = wotahero.o muzak.o unpucrunch.o startup.o imagemoiety.o
 
-all:	images wotahero putest
+all:	images wotahero test1.pucrunch putest
 
 %.o:	%.s
 	ca65 $(AINC) $(AFLAGS) $+
 
 wotahero:	$(OBJS)
 	cl65 $(CFLAGS) -v -m wotahero.map -Ln wotahero.vicelabel -C wotahero.cfg $+
+
+test1.pucrunch:
+	echo -n "AAAAABRACADABRABRAAAAA" | ./pucrunch/pucrunch -d -l 0x400 > $@
 
 putest:	unpucrunch.o putest.o
 	cl65 -v -t c64 -o $@ $+
