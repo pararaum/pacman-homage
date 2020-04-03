@@ -3,6 +3,14 @@
 	cld
 	cld
 	sei
+	;;  Clear BSS
+	ldx	#0
+	txa
+clearloop:
+	sta	$0200,x
+	sta	$0300,x
+	dex
+	bne	clearloop
 	ldx	#$ff
 	txs
 	jsr	_main

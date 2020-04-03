@@ -45,15 +45,37 @@ imagecolours:
 	.bss
 framecounter:	.word 0
 ciatimercopy:	.dword 0
+imagecounter:	.byte 0
 
 	.data
 image_iwatani:
 	.incbin	"toru_iwatani.bw.c64"
-image_cr_story00:
+image_cr_story:
 	.incbin	"story.00.pucr",2
 image_cr_iwatani:
 	.incbin	"toru_iwatani.bw.pucr",2
-
+image_cr_story00:
+	.incbin	"story.008008.pucr",2
+image_cr_story01:
+	.incbin	"story.008150.pucr",2
+image_cr_story02:
+	.incbin	"story.008298.pucr",2
+image_cr_story03:
+	.incbin	"story.0083e0.pucr",2
+image_cr_story04:
+	.incbin	"story.0d8008.pucr",2
+image_cr_story05:
+	.incbin	"story.0d8150.pucr",2
+image_cr_story06:
+	.incbin	"story.0d8298.pucr",2
+image_cr_story07:
+	.incbin	"story.0d83e0.pucr",2
+image_cr_story08:
+	.incbin	"story.1a8150.pucr",2
+	.byte	"images end"
+	.define	ImageTable	image_cr_story00, image_cr_story01, image_cr_story02, image_cr_story03, image_cr_story04, image_cr_story05, image_cr_story06, image_cr_story07, image_cr_story08
+imageTableLO:	.lobytes	ImageTable
+imageTableHI:	.hibytes	ImageTable
 
 	.code
 _main:
@@ -65,6 +87,7 @@ _main:
 	lda	#0
 	sta	framecounter
 	sta	framecounter+1
+	sta	imagecounter
 	cli
 mainloop:
 	sei
@@ -76,20 +99,34 @@ mainloop:
 	pla			; Resotre old configuration.
 	sta	$1
 	cli
-	;; 
-	lda	#$1
-	jsr	wait_for_framecounter
-	;inc	imagecolours
-	;inc	$e000
 	;;
+displayloop:
 	lda	#$2
 	jsr	wait_for_framecounter
-	ldx	#>image_cr_story00
-	ldy	#<image_cr_story00
+	ldx	imagecounter
+	ldy	imageTableLO,x
+	lda	imageTableHI,x
+	tax
 	jsr	unpucrunch
-	nop
-	ldy	#0
+	jsr	shuffle_image_memory
+	inc	imagecounter
+	lda	#$8
+	cmp	imagecounter
+	bne	displayloop
+	lda	#0
+	sta	imagecounter
 	;;
+	lda	#$34		; End after n*256 frames.
+	cmp	framecounter+1
+	jne	mainloop
+	rts
+
+;;; Copy image data in memory.
+;;; Input:
+;;; Changes: A/Y, srcptr, dstptr,counter16
+;;; Output:
+shuffle_image_memory:
+	ldy	#0
 	P_loadi	srcptr,$d400+8000+1000
 	P_loadi	dstptr,$d000+1000
 	P_loadi counter16,1000+1
@@ -122,12 +159,9 @@ imageloop3:
 	P_dec	dstptr
 	P_dec	counter16
 	P_branchNZ counter16,imageloop3
-	nop
-	;; 
-	lda	#$34		; End after n*256 frames.
-	cmp	framecounter+1
-	jne	mainloop
 	rts
+
+
 
 ;;; Wait until the framecounter reaches a value, clear to zero afterwards. Only high byte!
 ;;; Input:
