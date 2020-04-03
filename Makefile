@@ -2,7 +2,7 @@
 ##echo $(shell pgrep -f "x64.*-remotemonitor" || x64 -remotemonitor )&
 
 AFLAGS=-I includeCC65
-OBJS = wotahero.o muzak.o unpucrunch.o startup.o
+OBJS = wotahero.o muzak.o unpucrunch.o startup.o imagemoiety.o
 
 all:	images wotahero putest
 
@@ -31,4 +31,7 @@ run:	wotahero
 debug:
 	@(nc localhost 6510; exit 0)
 
-.PHONY:	wotahero clean debug run
+crunch:
+	./pucrunch/pucrunch -x '$$400' wotahero prg
+
+.PHONY:	wotahero clean crunch debug run
