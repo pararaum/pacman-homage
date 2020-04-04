@@ -13,6 +13,7 @@
 	.import	shuffle_image_memory
 	.import	imageTableHI
 	.import imageTableLO
+	.import no_of_story_images
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -101,7 +102,7 @@ displayloop:
 	jsr	unpucrunch
 	;; 	jsr	shuffle_image_memory
 	inc	imagecounter
-	lda	#$8
+	lda	no_of_story_images
 	cmp	imagecounter
 	bne	displayloop
 	lda	#0

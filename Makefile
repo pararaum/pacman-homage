@@ -24,7 +24,7 @@ putest:	unpucrunch.o putest.o
 %.pucr:	%.c64
 	./swap-image $+ | ./pucrunch/pucrunch -c0 -d -l 0xdc00 > $@
 
-images:	story.00.pucr toru_iwatani.bw.pucr story.008008.pucr story.008150.pucr story.008298.pucr story.0083e0.pucr story.0d8008.pucr story.0d8150.pucr story.0d8298.pucr story.0d83e0.pucr story.1a8008.pucr story.1a8150.pucr
+images:	toru_iwatani.bw.pucr story.008008.pucr story.008150.pucr story.008298.pucr story.0083e0.pucr story.0d8008.pucr story.0d8150.pucr story.0d8298.pucr story.0d83e0.pucr story.1a8008.pucr story.1a8150.pucr
 
 
 clean:
