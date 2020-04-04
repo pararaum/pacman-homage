@@ -187,9 +187,12 @@ setupirq:
 
 init:
 	SwitchVICBank 3
-	SetHiresBitmapMode
+	;; Turn on raster engine and display a bitmap.
+	lda	#%00111011	; https://www.c64-wiki.de/wiki/VIC
+	sta	$d011
 	SetBitmapAddress $2000
 	SetScreenMemory $1c00
+	lda	#0
 	jsr	sidMuzakInit
 	lda	#0
 	sta	$dc0f
