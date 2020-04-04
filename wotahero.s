@@ -14,6 +14,7 @@
 	.import	imageTableHI
 	.import imageTableLO
 	.import no_of_story_images
+	.import sprite_0,sprite_1,sprite_2,sprite_3
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -40,12 +41,12 @@ irqXsave:	.byte 0
 irqYsave:	.byte 0
 
 	.segment "IMAGE"
+sprites:
+	.res	64*16		; 1024
 screen0:
 	.res	1024
 screen1:
 	.res	1024
-sprites:
-	.res	64*16		; 1024
 imagecolours:
 	;; Screen Ram, positioned in the file after the 8000 bytes of the bitmap.
 	.incbin	"toru_iwatani.bw.c64",8000,1000
@@ -76,6 +77,35 @@ _main:
 	sta	framecounter
 	sta	framecounter+1
 	sta	imagecounter
+	lda	#<sprite_0
+	ldx	#>sprite_0
+	ldy	#0
+	jsr	copy_a_sprite
+	lda	#<sprite_1
+	ldx	#>sprite_1
+	ldy	#1
+	jsr	copy_a_sprite
+	lda	#<sprite_2
+	ldx	#>sprite_2
+	ldy	#2
+	jsr	copy_a_sprite
+	lda	#<sprite_3
+	ldx	#>sprite_3
+	ldy	#3
+	jsr	copy_a_sprite
+	lda	#($d000-$c000)/64
+	ldx	#0
+	clc
+	sta	spritepointer,x
+	inx
+	adc	#1
+	sta	spritepointer,x
+	inx
+	adc	#1
+	sta	spritepointer,x
+	inx
+	adc	#1
+	sta	spritepointer,x
 	cli
 mainloop:
 	sei
@@ -196,6 +226,22 @@ init:
 	SetScreenMemory $1c00
 	lda	#0
 	jsr	sidMuzakInit
+	lda	#50		; Position of sprite 0
+	ldx	#16-1
+@l1:	sta	$d000,x
+	sta	$d001,x
+	dex
+	bpl	@l1
+	lda	#0
+	sta	$d010		; MSB is zero of all sprites.
+	sta	$d01b		; Sprites have priority.
+	sta	$d01c		; Single colour sprites.
+	lda	#$ff		; Turn sprites on and make them big.
+	sta	$d015
+	sta	$d017
+	sta	$d01d
+	lda	#7		; Yello
+	sta	$d027
 	lda	#0
 	sta	$dc0f
 	lda	#$ff
@@ -252,3 +298,32 @@ init:
 ; Raster time equals the duration it takes the VIC-II to put a byte of graphic data (=8 pixels/bits) onto the screen and is measured in horizontal lines or CPU cycles.
 ; 
 ; Raster time for one horizontal line of graphic (504 pixels including border) equals 63 CPU cycles. The whole graphic screen consists of 312 horizontal lines including the border. In total there are 63 * 312 CPU cycles for one complete screen update/frame, which equals 19656 CPU cycles. Given the C64 CPU clock with 985248 Hertz divided by the 19565 CPU cycles, the result is ~50Hz (the PAL screen standard), not considering the time for screen blanking.
+
+;;; Copy a sprite into a sprite buffer.
+;;; Input: A/X=pointer to sprite data, Y=Number of sprite buffer relative to "sprites".
+;;; Changes: A/X
+copy_a_sprite:
+	sta	@l1+1
+	stx	@l1+2
+	lda	#<sprites	; Set default destination address.
+	sta	@spritesptr+1
+	lda	#>sprites
+	sta	@spritesptr+2
+	tya			; Move sprite buffer position into A
+	asl			; * 64
+	asl
+	asl
+	asl
+	asl
+	asl
+	clc
+	adc	@spritesptr+1	; Add to low byte
+	bcc	@run
+	inc	@spritesptr+2
+@run:	ldx	#63
+@l1:	lda	$ffff,x
+@spritesptr:
+	sta	sprites,x
+	dex
+	bpl	@l1
+	rts
