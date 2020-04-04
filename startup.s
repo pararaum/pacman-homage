@@ -27,7 +27,7 @@ clearbss:
 	lda	#>__BSSMEM_START__
 	sta	bssptr+2
 	lda	#CLEAR_VALUE	; Clear value
-	lda	#0		; Clear X
+	ldx	#0		; Clear X
 	ldy	#>__BSSMEM_SIZE__ ; Number of pages to clear
 bssptr:	sta	$aaaa,x		; Clear a page
 	dex
@@ -35,6 +35,7 @@ bssptr:	sta	$aaaa,x		; Clear a page
 	inc	bssptr+2	; Increment to next page.
 	dey			; Decrement page counter
 	bne	bssptr		; Loop
+	;;  See https://github.com/cc65/cc65/blob/master/libsrc/common/zerobss.s
 	lda	bssptr+2	; Get high byte.
 	sta	restptr+2	; Copy to the pointer to clear the rest.
 	lda	#<__BSSMEM_START__ ; Pointer LO byte.
