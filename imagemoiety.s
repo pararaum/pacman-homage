@@ -11,16 +11,11 @@
 	.importzp	dstptr
 	.importzp	counter16
 
-	.export	image_iwatani
 	.export	imageTableLO, imageTableHI
 	.export shuffle_image_memory
 	.export no_of_story_images
 
 	.data
-image_iwatani:
-	.incbin	"toru_iwatani.bw.c64"
-image_cr_iwatani:
-	.incbin	"toru_iwatani.bw.pucr",2
 image_cr_story00:
 	.incbin	"story.008008.pucr",2
 image_cr_story01:

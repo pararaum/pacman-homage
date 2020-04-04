@@ -62,6 +62,7 @@ ciatimercopy:	.dword 0
 imagecounter:	.byte 0
 
 	.data
+	.asciiz	"Data Segment"
 
 	.code
 _main:
@@ -251,7 +252,3 @@ init:
 ; Raster time equals the duration it takes the VIC-II to put a byte of graphic data (=8 pixels/bits) onto the screen and is measured in horizontal lines or CPU cycles.
 ; 
 ; Raster time for one horizontal line of graphic (504 pixels including border) equals 63 CPU cycles. The whole graphic screen consists of 312 horizontal lines including the border. In total there are 63 * 312 CPU cycles for one complete screen update/frame, which equals 19656 CPU cycles. Given the C64 CPU clock with 985248 Hertz divided by the 19565 CPU cycles, the result is ~50Hz (the PAL screen standard), not considering the time for screen blanking.
-
-
-	.data
-	.asciiz	"Data Segment"
