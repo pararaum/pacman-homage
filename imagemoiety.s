@@ -45,7 +45,7 @@ image_cr_story08:
 imageTableLO:	.lobytes	ImageTable
 imageTableHI:	.hibytes	ImageTable
 
-
+	.code
 ;;; Copy image data in memory. Uses the area at $d000 as a
 ;	temporary. So we copy the screen ram to $d000, the bitmap to
 ;	$e000, and the save screen from $d000 to $dc00. This can be
