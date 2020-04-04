@@ -99,7 +99,7 @@ displayloop:
 	lda	imageTableHI,x
 	tax
 	jsr	unpucrunch
-	jsr	shuffle_image_memory
+	;; 	jsr	shuffle_image_memory
 	inc	imagecounter
 	lda	#$8
 	cmp	imagecounter
