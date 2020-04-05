@@ -1,4 +1,10 @@
 	.export sprite_0, sprite_1, sprite_2,sprite_3
+	.export animate_sprite
+
+	.import	framecounter
+	.import spritepointer
+
+	.macpack generic
 
 	.data
 ;;; The zero byte fills the sprite up to 64 bytes so that they are correctly aligned.
@@ -138,5 +144,22 @@ setsprite:
 	ora	$d010
 	sta	$d010
 	@out:
+	rts
+
+;;; Animate the sprite pointer.
+;;; Modifies: A/X/Y
+	.code
+animate_sprite:
+	lda	framecounter
+	lsr
+	lsr
+	and	#$03
+	add	#($d000-$c000)/64
+	ldx	#0
+	@l:
+	sta	spritepointer,x
+	inx
+	cpx	#4
+	bne	@l
 	rts
 

@@ -24,6 +24,7 @@
 	.import imagecounter
 	.import ciatimercopy
 	.import uncompress_next_image
+	.import animate_sprite
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -151,15 +152,6 @@ irqroutine:
 	ldx	irqXsave
 	pla
 	rti
-
-animate_sprite:
-	lda	framecounter
-	lsr
-	lsr
-	and	#$03
-	add	#($d000-$c000)/64
-	sta	spritepointer
-	rts
 
 setupirq:
 	lda	#<irqroutine
