@@ -19,6 +19,7 @@
 	.import	spritepointer
 	.import whiteout_screen
 	.import wait_for_framecounter
+	.import	wait_single_frame
 	.import	framecounter
 	.import imagecounter
 	.import ciatimercopy
@@ -128,11 +129,7 @@ displayloop:
 whiteout_whole_screen:
 	.repeat	20
 	jsr	whiteout_screen
-	.scope
-	lda	framecounter
-wait:	cmp	framecounter
-	beq	wait
-	.endscope
+	jsr	wait_single_frame
 	.endrepeat
 	rts
 
