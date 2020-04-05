@@ -6,8 +6,13 @@
 CLEAR_VALUE = 0
 
 	cld
-	cld
-	sei
+	clv
+	bvc	skip
+	.byte	"   "
+	.byte $14,$08,$05,$20,$37,$14,$08,$20,$04,$09,$16,$09,$13,$09,$0f,$0e
+	.byte	"   "
+	.BYTE	"THE 7TH DIVISION"
+skip:	sei
 	jsr	clearbss
 	lda	#$35		; Set to I/O only.
 	sta	$1
@@ -17,10 +22,6 @@ CLEAR_VALUE = 0
 	lda	#$37
 	sta	$1
 	jmp	64738
-	.byte	"   "
-	.byte $14,$08,$05,$20,$37,$14,$08,$20,$04,$09,$16,$09,$13,$09,$0f,$0e
-	.byte	"   "
-	.BYTE	"THE 7TH DIVISION"
 clearbss:
 	lda	#<__BSSMEM_START__ ; Set pointer to the beginning of BSS
 	sta	bssptr+1

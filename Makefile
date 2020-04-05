@@ -28,7 +28,7 @@ images:	story.008008.pucr story.008150.pucr story.008298.pucr story.0083e0.pucr 
 
 
 clean:
-	rm -f wotahero wotahero.map wotahero.vicelabel putest *.o *.pucr
+	rm -f wotahero wotahero.prg wotahero.map wotahero.vicelabel putest *.o *.pucr
 
 run:	wotahero
 	@echo  '\nbank ram \nl "wotahero" 0 \ng 0400\n' | nc -N localhost 6510
@@ -36,7 +36,7 @@ run:	wotahero
 debug:
 	@(nc localhost 6510; exit 0)
 
-crunch:
-	./pucrunch/pucrunch -x '$$400' wotahero prg
+crunch:	wotahero
+	./pucrunch/pucrunch -x '$$400' wotahero wotahero.prg
 
 .PHONY:	wotahero clean crunch debug run
