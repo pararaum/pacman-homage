@@ -10,10 +10,11 @@
 	.importzp	srcptr
 	.importzp	dstptr
 	.importzp	counter16
+	.import	unpucrunch
+	.import imagecounter
 
 	.export	imageTableLO, imageTableHI
-	.export shuffle_image_memory
-	.export no_of_story_images
+	.export uncompress_next_image
 
 	.data
 image_cr_story00:
@@ -43,47 +44,22 @@ imageTableHI:	.hibytes	ImageTable
 no_of_story_images:
 	.byte	no_of_story_images-imageTableHI
 
-
 	.code
-;;; Copy image data in memory. Uses the area at $d000 as a
-;	temporary. So we copy the screen ram to $d000, the bitmap to
-;	$e000, and the save screen from $d000 to $dc00. This can be
-;	done better.
-;;; Input:
-;;; Changes: A/Y, srcptr, dstptr,counter16
-;;; Output:
-shuffle_image_memory:
-	ldy	#0
-	P_loadi	srcptr,$d400+8000+1000
-	P_loadi	dstptr,$d000+1000
-	P_loadi counter16,1000+1
-imageloop2:
-	lda	(srcptr),y
-	sta	(dstptr),y
-	P_dec	srcptr
-	P_dec	dstptr
-	P_dec	counter16
-	P_branchNZ counter16,imageloop2
-	;; 
-	P_loadi	srcptr,$d400+8000
-	P_loadi	dstptr,$e000+8000
-	P_loadi counter16,8000+1
-imageloop1:
-	lda	(srcptr),y
-	sta	(dstptr),y
-	P_dec	srcptr
-	P_dec	dstptr
-	P_dec	counter16
-	P_branchNZ counter16,imageloop1
-	;;
-	P_loadi	srcptr,$d000+1000
-	P_loadi	dstptr,$dc00+1000
-	P_loadi counter16,1000+1
-imageloop3:
-	lda	(srcptr),y
-	sta	(dstptr),y
-	P_dec	srcptr
-	P_dec	dstptr
-	P_dec	counter16
-	P_branchNZ counter16,imageloop3
+;;; Uncompress the next image to $DC00-$FF3F. Cycles the images after the last image was found.
+;;; Modifies: A/X/Y
+;;; Output: A=0 if images were recycled.
+uncompress_next_image:
+	ldx	imagecounter
+	ldy	imageTableLO,x
+	lda	imageTableHI,x
+	tax
+	jsr	unpucrunch
+	lda	imagecounter
+	clc
+	adc	#1
+	cmp	no_of_story_images
+	bne	@norestart
+	lda	#0
+@norestart:
+	sta	imagecounter
 	rts

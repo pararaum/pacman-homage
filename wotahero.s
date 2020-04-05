@@ -23,6 +23,7 @@
 	.import	framecounter
 	.import imagecounter
 	.import ciatimercopy
+	.import uncompress_next_image
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -109,18 +110,9 @@ displayloop:
 	lda	#$2
 	jsr	wait_for_framecounter
 	jsr	whiteout_whole_screen
-	ldx	imagecounter
-	ldy	imageTableLO,x
-	lda	imageTableHI,x
-	tax
-	jsr	unpucrunch
-	;; 	jsr	shuffle_image_memory
-	inc	imagecounter
-	lda	no_of_story_images
-	cmp	imagecounter
-	jne	displayloop
-	lda	#0
-	sta	imagecounter
+	jsr	uncompress_next_image
+	cmp	#0
+	bne	displayloop
 	;;
 	lda	#$34		; End after n*256 frames.
 	cmp	framecounter+1
