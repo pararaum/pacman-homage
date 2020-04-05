@@ -14,6 +14,7 @@ CLEAR_VALUE = 0
 	.BYTE	"THE 7TH DIVISION"
 skip:	sei
 	jsr	clearbss
+	jsr	clearzp
 	lda	#$35		; Set to I/O only.
 	sta	$1
 	ldx	#$ff
@@ -22,6 +23,12 @@ skip:	sei
 	lda	#$37
 	sta	$1
 	jmp	64738
+clearzp:
+	ldx	#2
+@l:	sta	$00,x
+	inx
+	bne	@l
+	rts
 clearbss:
 	lda	#<__BSSMEM_START__ ; Set pointer to the beginning of BSS
 	sta	bssptr+1
