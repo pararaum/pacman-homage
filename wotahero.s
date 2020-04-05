@@ -17,6 +17,11 @@
 	.import sprite_0,sprite_1,sprite_2,sprite_3
 	.import	sprites
 	.import	spritepointer
+	.import whiteout_screen
+	.import wait_for_framecounter
+	.import	framecounter
+	.import imagecounter
+	.import ciatimercopy
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -26,8 +31,6 @@
 	.exportzp	dstptr
 	.exportzp	counter16
 	.export _main
-	.export	framecounter
-	.export ciatimercopy
 	.export	copy_a_sprite
 
 	.segment "LOADADDR"
@@ -44,11 +47,6 @@ irqXsave:	.byte 0
 irqYsave:	.byte 0
 
 
-	.bss
-framecounter:	.word 0
-ciatimercopy:	.dword 0
-imagecounter:	.byte 0
-
 	.data
 	.asciiz	"Data Segment"
 
@@ -60,10 +58,6 @@ _main:
 	jsr	init
 	lda	#$34
 	sta	$1
-	lda	#0
-	sta	framecounter
-	sta	framecounter+1
-	sta	imagecounter
 	lda	#<sprite_0
 	ldx	#>sprite_0
 	ldy	#0
@@ -113,6 +107,7 @@ mainloop:
 displayloop:
 	lda	#$2
 	jsr	wait_for_framecounter
+	jsr	whiteout_whole_screen
 	ldx	imagecounter
 	ldy	imageTableLO,x
 	lda	imageTableHI,x
@@ -122,7 +117,7 @@ displayloop:
 	inc	imagecounter
 	lda	no_of_story_images
 	cmp	imagecounter
-	bne	displayloop
+	jne	displayloop
 	lda	#0
 	sta	imagecounter
 	;;
@@ -130,21 +125,18 @@ displayloop:
 	cmp	framecounter+1
 	jne	mainloop
 	rts
-
-
-
-
-;;; Wait until the framecounter reaches a value, clear to zero afterwards. Only high byte!
-;;; Input:
-;;;	A: High value to wait for
-;;; Modifies: A
-;;; Returns: A=0
-wait_for_framecounter:
-@l1:	cmp	framecounter+1
-	bne	@l1
-	lda	#0
-	sta	framecounter+1
+whiteout_whole_screen:
+	.repeat	20
+	jsr	whiteout_screen
+	.scope
+	lda	framecounter
+wait:	cmp	framecounter
+	beq	wait
+	.endscope
+	.endrepeat
 	rts
+
+
 
 irqroutine:
 	pha
