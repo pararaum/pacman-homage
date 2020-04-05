@@ -26,6 +26,7 @@
 	.export _main
 	.export	framecounter
 	.export ciatimercopy
+	.export	copy_a_sprite
 
 	.segment "LOADADDR"
 	.export __LOADADDR__
@@ -318,6 +319,7 @@ copy_a_sprite:
 	asl
 	clc
 	adc	@spritesptr+1	; Add to low byte
+	sta	@spritesptr+1
 	bcc	@run
 	inc	@spritesptr+2
 @run:	ldx	#63

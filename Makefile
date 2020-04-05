@@ -3,7 +3,7 @@
 
 AFLAGS = -DNDEBUG
 AINC = -I includeCC65
-OBJS = wotahero.o muzak.o unpucrunch.o startup.o imagemoiety.o
+OBJS = wotahero.o muzak.o unpucrunch.o startup.o imagemoiety.o spritemoiety.o
 #TMPFILE := $(shell mktemp)
 
 all:	images wotahero test1.pucrunch putest
