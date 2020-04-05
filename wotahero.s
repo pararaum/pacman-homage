@@ -15,6 +15,8 @@
 	.import imageTableLO
 	.import no_of_story_images
 	.import sprite_0,sprite_1,sprite_2,sprite_3
+	.import	sprites
+	.import	spritepointer
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -40,22 +42,6 @@ tmpptr:	.word	0
 counter16:	.word 0
 irqXsave:	.byte 0
 irqYsave:	.byte 0
-
-	.segment "IMAGE"
-sprites:
-	.res	64*16		; 1024
-screen0:
-	.res	1024
-screen1:
-	.res	1024
-imagecolours:
-	;; Screen Ram, positioned in the file after the 8000 bytes of the bitmap.
-	.incbin	"toru_iwatani.bw.c64",8000,1000
-	.res	16		; Empty space
-spritepointer:
-	.res	8
-	;; Here comes the bitmap, the first 8000 bytes of the file.
-	.incbin	"toru_iwatani.bw.c64",0,8000
 
 
 	.bss
