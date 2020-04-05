@@ -123,3 +123,20 @@ sprite_4:
 	.byte %00000001,%11111111,%00000000
 	.byte %00000000,%01111100,%00000000
 
+;;; TODO: clean up this crap!
+sprite0pos:	.byte	50
+	.word	24
+
+setsprite:
+	lda	sprite0pos
+	sta	$d000
+	lda	sprite0pos+1
+	sta	$d001
+	lda	sprite0pos+2
+	beq	@out
+	lda	#1
+	ora	$d010
+	sta	$d010
+	@out:
+	rts
+

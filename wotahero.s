@@ -178,10 +178,21 @@ irqroutine:
 	asl	$d019
 	lda	#$34		; Turn to RAM only
 	sta	$1
+	;; Do all IRQ stuff here that needs the memory below I/O.
+	jsr	animate_sprite
 	ldy	irqYsave
 	ldx	irqXsave
 	pla
 	rti
+
+animate_sprite:
+	lda	framecounter
+	lsr
+	lsr
+	and	#$03
+	add	#($d000-$c000)/64
+	sta	spritepointer
+	rts
 
 setupirq:
 	lda	#<irqroutine
@@ -228,11 +239,14 @@ init:
 	lda	#0
 	jsr	sidMuzakInit
 	lda	#50		; Position of sprite 0
-	ldx	#16-1
+	ldx	#0
 @l1:	sta	$d000,x
 	sta	$d001,x
-	dex
-	bpl	@l1
+	add	#31
+	inx
+	inx
+	cpx	#16
+	bne	@l1
 	lda	#0
 	sta	$d010		; MSB is zero of all sprites.
 	sta	$d01b		; Sprites have priority.
