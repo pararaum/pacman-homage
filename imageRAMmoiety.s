@@ -5,6 +5,7 @@
 	.export	spritepointer
 	.export	whiteout_screen
 	.export copy_image2screen
+	.export colourin_screen
 
 	.macpack	generic
 
@@ -102,9 +103,126 @@ colourout_screen:
 	@out:
 	rts
 
+;;; Copy the uncrunched colour information to the active screen ram.
+;;; Modifies: A/X/Y
+colourin_screen:
+	lda	_whiteout_pos
+	tax
+	;; 40-A-1 = -(A+1-40)
+	sub	#39
+	eor	#$ff		; Negate
+	add	#1
+	tay
+ 	lda	imagecolours+40*0,x
+	sta	screen4col+40*0,x
+	lda	imagecolours+40*0,y
+	sta	screen4col+40*0,y
+	lda	imagecolours+40*1,x
+	sta	screen4col+40*1,x
+	lda	imagecolours+40*1,y
+	sta	screen4col+40*1,y
+	lda	imagecolours+40*2,x
+	sta	screen4col+40*2,x
+	lda	imagecolours+40*2,y
+	sta	screen4col+40*2,y
+	lda	imagecolours+40*3,x
+	sta	screen4col+40*3,x
+	lda	imagecolours+40*3,y
+	sta	screen4col+40*3,y
+	lda	imagecolours+40*4,x
+	sta	screen4col+40*4,x
+	lda	imagecolours+40*4,y
+	sta	screen4col+40*4,y
+	lda	imagecolours+40*5,x
+	sta	screen4col+40*5,x
+	lda	imagecolours+40*5,y
+	sta	screen4col+40*5,y
+	lda	imagecolours+40*6,x
+	sta	screen4col+40*6,x
+	lda	imagecolours+40*6,y
+	sta	screen4col+40*6,y
+	lda	imagecolours+40*7,x
+	sta	screen4col+40*7,x
+	lda	imagecolours+40*7,y
+	sta	screen4col+40*7,y
+	lda	imagecolours+40*8,x
+	sta	screen4col+40*8,x
+	lda	imagecolours+40*8,y
+	sta	screen4col+40*8,y
+	lda	imagecolours+40*9,x
+	sta	screen4col+40*9,x
+	lda	imagecolours+40*9,y
+	sta	screen4col+40*9,y
+	lda	imagecolours+40*10,x
+	sta	screen4col+40*10,x
+	lda	imagecolours+40*10,y
+	sta	screen4col+40*10,y
+	lda	imagecolours+40*11,x
+	sta	screen4col+40*11,x
+	lda	imagecolours+40*11,y
+	sta	screen4col+40*11,y
+	lda	imagecolours+40*12,x
+	sta	screen4col+40*12,x
+	lda	imagecolours+40*12,y
+	sta	screen4col+40*12,y
+	lda	imagecolours+40*13,x
+	sta	screen4col+40*13,x
+	lda	imagecolours+40*13,y
+	sta	screen4col+40*13,y
+	lda	imagecolours+40*14,x
+	sta	screen4col+40*14,x
+	lda	imagecolours+40*14,y
+	sta	screen4col+40*14,y
+	lda	imagecolours+40*15,x
+	sta	screen4col+40*15,x
+	lda	imagecolours+40*15,y
+	sta	screen4col+40*15,y
+	lda	imagecolours+40*16,x
+	sta	screen4col+40*16,x
+	lda	imagecolours+40*16,y
+	sta	screen4col+40*16,y
+	lda	imagecolours+40*17,x
+	sta	screen4col+40*17,x
+	lda	imagecolours+40*17,y
+	sta	screen4col+40*17,y
+	lda	imagecolours+40*18,x
+	sta	screen4col+40*18,x
+	lda	imagecolours+40*18,y
+	sta	screen4col+40*18,y
+	lda	imagecolours+40*19,x
+	sta	screen4col+40*19,x
+	lda	imagecolours+40*19,y
+	sta	screen4col+40*19,y
+	lda	imagecolours+40*20,x
+	sta	screen4col+40*20,x
+	lda	imagecolours+40*20,y
+	sta	screen4col+40*20,y
+	lda	imagecolours+40*21,x
+	sta	screen4col+40*21,x
+	lda	imagecolours+40*21,y
+	sta	screen4col+40*21,y
+	lda	imagecolours+40*22,x
+	sta	screen4col+40*22,x
+	lda	imagecolours+40*22,y
+	sta	screen4col+40*22,y
+	lda	imagecolours+40*23,x
+	sta	screen4col+40*23,x
+	lda	imagecolours+40*23,y
+	sta	screen4col+40*23,y
+	lda	imagecolours+40*24,x
+	sta	screen4col+40*24,x
+	lda	imagecolours+40*24,y
+	sta	screen4col+40*24,y
+	dec	_whiteout_pos
+	dec	_whiteout_pos
+	bpl	@out
+	lda	#39
+	sta	_whiteout_pos
+	@out:
+	rts
+
 	.data
 _whiteout_pos:	.byte	39
-
 
 
 	.code

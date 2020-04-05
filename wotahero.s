@@ -26,6 +26,7 @@
 	.import uncompress_next_image
 	.import animate_sprite
 	.import copy_image2screen
+	.import colourin_screen
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -119,7 +120,8 @@ mainloop:
 	jsr	whiteout_whole_screen
 displayloop:
 	jsr	uncompress_next_image
-	jsr	copy_image2screen ; TODO: Or something else...
+;;; 	jsr	copy_image2screen ; TODO: Or something else...
+	jsr	colourin_whole_screen
 	lda	#$2
 	jsr	wait_for_framecounter
 	jsr	whiteout_whole_screen
@@ -136,7 +138,12 @@ whiteout_whole_screen:
 	jsr	wait_single_frame
 	.endrepeat
 	rts
-
+colourin_whole_screen:
+	.repeat	20
+	jsr	colourin_screen
+	jsr	wait_single_frame
+	.endrepeat
+	rts
 
 
 irqroutine:
