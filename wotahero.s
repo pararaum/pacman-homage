@@ -25,6 +25,7 @@
 	.import ciatimercopy
 	.import uncompress_next_image
 	.import animate_sprite
+	.import copy_image2screen
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -106,12 +107,22 @@ mainloop:
 	sta	$d020
 	dec	$1
 	cli
-	;;
+	;; Now wait some time before the displayloop begins.
+	lda	#$2
+	jsr	wait_for_framecounter
+	jsr	copy_image2screen
+	sei
+	inc	$1		; I/O on
+	SetScreenMemory $1800	; $D800
+	dec	$1		; RAM ONLY
+	cli
+	jsr	whiteout_whole_screen
 displayloop:
+	jsr	uncompress_next_image
+	jsr	copy_image2screen ; TODO: Or something else...
 	lda	#$2
 	jsr	wait_for_framecounter
 	jsr	whiteout_whole_screen
-	jsr	uncompress_next_image
 	cmp	#0
 	bne	displayloop
 	;;
@@ -187,7 +198,7 @@ setupirq:
 	sta	$d01a
 	rts
 
-
+;;; At the beginning the image is displayed at $E000 ($2000 in the VIC bank), the screen ram is located at $DC00 ($1c00 in the VIC bank). 
 init:
 	SwitchVICBank 3
 	;; Turn on raster engine and display a bitmap.
