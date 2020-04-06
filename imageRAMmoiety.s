@@ -10,7 +10,9 @@
 	.macpack	generic
 
 sprites:
-	.res	64*16		; 1024
+	.res	64*8		; 512
+spritescroller:
+	.res	64*8		; 512
 screen0:
 	.res	1024
 screen4col:			; Screen with colours for the hires bitmap in the later stages.

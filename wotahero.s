@@ -28,6 +28,8 @@
 	.import copy_image2screen
 	.import colourin_screen
 	.import move_sprite0_horizontally
+	.import	copy_a_sprite
+
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -37,7 +39,6 @@
 	.exportzp	dstptr
 	.exportzp	counter16
 	.export _main
-	.export	copy_a_sprite
 
 	.segment "LOADADDR"
 	.export __LOADADDR__
@@ -294,33 +295,3 @@ init:
 ; Raster time equals the duration it takes the VIC-II to put a byte of graphic data (=8 pixels/bits) onto the screen and is measured in horizontal lines or CPU cycles.
 ; 
 ; Raster time for one horizontal line of graphic (504 pixels including border) equals 63 CPU cycles. The whole graphic screen consists of 312 horizontal lines including the border. In total there are 63 * 312 CPU cycles for one complete screen update/frame, which equals 19656 CPU cycles. Given the C64 CPU clock with 985248 Hertz divided by the 19565 CPU cycles, the result is ~50Hz (the PAL screen standard), not considering the time for screen blanking.
-
-;;; Copy a sprite into a sprite buffer.
-;;; Input: A/X=pointer to sprite data, Y=Number of sprite buffer relative to "sprites".
-;;; Changes: A/X
-copy_a_sprite:
-	sta	@l1+1
-	stx	@l1+2
-	lda	#<sprites	; Set default destination address.
-	sta	@spritesptr+1
-	lda	#>sprites
-	sta	@spritesptr+2
-	tya			; Move sprite buffer position into A
-	asl			; * 64
-	asl
-	asl
-	asl
-	asl
-	asl
-	clc
-	adc	@spritesptr+1	; Add to low byte
-	sta	@spritesptr+1
-	bcc	@run
-	inc	@spritesptr+2
-@run:	ldx	#63
-@l1:	lda	$ffff,x
-@spritesptr:
-	sta	sprites,x
-	dex
-	bpl	@l1
-	rts

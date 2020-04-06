@@ -1,9 +1,11 @@
 	.export sprite_0, sprite_1, sprite_2,sprite_3
 	.export animate_sprite
 	.export move_sprite0_horizontally
+	.export	copy_a_sprite
 
 	.import	framecounter
 	.import spritepointer
+	.import	sprites
 
 	.macpack generic
 
@@ -134,6 +136,38 @@ sprite_4:
 sprite0pos:	.byte	50
 	.word	24
 
+	.code
+	;;; Copy a sprite into a sprite buffer.
+;;; Input: A/X=pointer to sprite data, Y=Number of sprite buffer relative to "sprites".
+;;; Changes: A/X
+copy_a_sprite:
+	sta	@l1+1
+	stx	@l1+2
+	lda	#<sprites	; Set default destination address.
+	sta	@spritesptr+1
+	lda	#>sprites
+	sta	@spritesptr+2
+	tya			; Move sprite buffer position into A
+	asl			; * 64
+	asl
+	asl
+	asl
+	asl
+	asl
+	clc
+	adc	@spritesptr+1	; Add to low byte
+	sta	@spritesptr+1
+	bcc	@run
+	inc	@spritesptr+2
+@run:	ldx	#63
+@l1:	lda	$ffff,x
+@spritesptr:
+	sta	sprites,x
+	dex
+	bpl	@l1
+	rts
+
+	.code
 setsprite:
 	lda	sprite0pos
 	sta	$d000
