@@ -65,22 +65,6 @@ _main:
 	jsr	init
 	lda	#$34
 	sta	$1
-	lda	#<sprite_0
-	ldx	#>sprite_0
-	ldy	#0
-	jsr	copy_a_sprite
-	lda	#<sprite_1
-	ldx	#>sprite_1
-	ldy	#1
-	jsr	copy_a_sprite
-	lda	#<sprite_2
-	ldx	#>sprite_2
-	ldy	#2
-	jsr	copy_a_sprite
-	lda	#<sprite_3
-	ldx	#>sprite_3
-	ldy	#3
-	jsr	copy_a_sprite
 	lda	#($d000-$c000)/64
 	ldx	#0
 	clc
