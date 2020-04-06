@@ -49,8 +49,14 @@ image_cr_story14:
 	.incbin	"story.278298.pucr",2
 image_cr_story15:
 	.incbin	"story.2783e0.pucr",2
+image_cr_story16:
+	.incbin	"story.348008.pucr",2
+image_cr_story17:
+	.incbin	"story.348150.pucr",2
+image_cr_story18:
+	.incbin	"story.348298.pucr",2
 	
-	.define	ImageTable	image_cr_story00, image_cr_story01, image_cr_story02, image_cr_story03, image_cr_story04, image_cr_story05, image_cr_story06, image_cr_story07, image_cr_story08, image_cr_story09, image_cr_story10, image_cr_story11, image_cr_story12, image_cr_story13, image_cr_story14, image_cr_story15
+	.define	ImageTable	image_cr_story00, image_cr_story01, image_cr_story02, image_cr_story03, image_cr_story04, image_cr_story05, image_cr_story06, image_cr_story07, image_cr_story08, image_cr_story09, image_cr_story10, image_cr_story11, image_cr_story12, image_cr_story13, image_cr_story14, image_cr_story15, image_cr_story16, image_cr_story17, image_cr_story18
 imageTableLO:	.lobytes	ImageTable
 imageTableHI:	.hibytes	ImageTable
 no_of_story_images:
