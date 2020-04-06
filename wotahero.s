@@ -228,8 +228,9 @@ init:
 	sta	$d010		; MSB is zero of all sprites.
 	sta	$d01b		; Sprites have priority.
 	sta	$d01c		; Single colour sprites.
-	lda	#$ff		; Turn sprites on and make them big.
+	lda	#$01		; Turn sprites on.
 	sta	$d015
+	lda	#$ff		; Make them big.
 	sta	$d017
 	sta	$d01d
 	lda	#7		; Yello
