@@ -1,5 +1,6 @@
 	.export sprite_0, sprite_1, sprite_2,sprite_3
 	.export animate_sprite
+	.export move_sprite0_horizontally
 
 	.import	framecounter
 	.import spritepointer
@@ -163,3 +164,31 @@ animate_sprite:
 	bne	@l
 	rts
 
+	.code
+move_sprite0_horizontally:
+	lda	$d010		; MSB
+	and 	#%00000001	; MSB of sprite 0.
+	bne	@greater256
+	lda	$d000
+	add	#3
+	sta	$d000
+	bcs	@overflow
+	rts
+	@overflow:
+	lda	#%00000001
+	ora	$d010		; Set MSB of X position.
+	sta	$d010
+	rts
+	@greater256:
+	lda	$d000
+	add	#3
+	sta	$d000
+	cmp	#345-256	; Out of right border?
+	bcc	@out		; No.
+	lda	#0		; Reset to zero
+	sta	$d000
+	lda	#%11111110
+	and	$d010		; Clear MSB of X position.
+	sta	$d010
+	@out:
+	rts

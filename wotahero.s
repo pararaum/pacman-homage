@@ -27,6 +27,7 @@
 	.import animate_sprite
 	.import copy_image2screen
 	.import colourin_screen
+	.import move_sprite0_horizontally
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -153,6 +154,7 @@ irqroutine:
 	lda	#$37		; Turn on I/O
 	sta	$1
 	;; 	inc	$d020
+	jsr	move_sprite0_horizontally
 	jsr	$1003
 	P_inc	framecounter	; Advance frame counter.
 	;; Copy the current timer information.
@@ -161,6 +163,7 @@ irqroutine:
 	sta	ciatimercopy,x
 	dex
 	bpl	@l1
+	;; Acknowledge IRQ.
 	asl	$d019
 	lda	#$34		; Turn to RAM only
 	sta	$1
