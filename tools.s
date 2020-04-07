@@ -13,7 +13,21 @@ framecounter:	.res	2	; Reserve a word
 ;;; Modifies: A
 ;;; Returns: A=0
 wait_for_framecounter:
-@l1:	cmp	framecounter+1
+@l1:
+	.ifdef	DEBUG
+	pha
+	sei
+	lda	$1
+	pha
+	lda	#$35
+	sta	$1
+	inc	$d020
+	pla
+	sta	$1
+	cli
+	pla
+	.endif
+	cmp	framecounter+1
 	bne	@l1
 	lda	#0
 	sta	framecounter+1
