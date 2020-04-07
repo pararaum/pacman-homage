@@ -2,12 +2,16 @@
 	.segment "STARTUP"
 	.import	__BSSMEM_START__
 	.import __BSSMEM_SIZE__
+	.macpack	cbm
 
 CLEAR_VALUE = 0
 
 	cld
 	clv
 	bvc	skip
+	.ifndef	NDEBUG
+	scrcode	"!DEBUG VERSION DO NOT SPREAD!"
+	.endif
 	.byte	"   "
 	.byte $14,$08,$05,$20,$37,$14,$08,$20,$04,$09,$16,$09,$13,$09,$0f,$0e
 	.byte	"   "
