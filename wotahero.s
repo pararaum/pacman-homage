@@ -30,6 +30,7 @@
 	.import	copy_a_sprite
 	.import	irqroutine
 	.import	ciatimer_init
+	.import scroller_init
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -57,6 +58,7 @@ _main:
 	sta	$d020
 	jsr	setupirq
 	jsr	init
+	jsr	scroller_init
 	lda	#$34
 	sta	$1
 	lda	#($d000-$c000)/64

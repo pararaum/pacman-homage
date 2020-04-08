@@ -7,14 +7,11 @@
 
 	.bss
 spriteregshadow:
-	.res	2*8		; Sprite positions
+	.res	8		; Sprite positions
 spriteregshadowmsb:
 	.res	1		; Sprite MSBs
 	
-
 	.data
-scrsprposx:
-	.word	0,48*1,48*2,48*3,48*4,48*5,48*6
 
 	.code
 scroller_init:
