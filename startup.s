@@ -10,12 +10,11 @@ CLEAR_VALUE = 0
 	clv
 	bvc	skip
 	.ifndef	NDEBUG
-	scrcode	"!DEBUG VERSION DO NOT SPREAD!"
+	scrcode	" !DEBUG VERSION DO NOT SPREAD! "
 	.endif
 	.byte	"   "
-	.byte $14,$08,$05,$20,$37,$14,$08,$20,$04,$09,$16,$09,$13,$09,$0f,$0e
+	scrcode	"THE 7TH DIVISION"
 	.byte	"   "
-	.BYTE	"THE 7TH DIVISION"
 skip:	sei
 	jsr	clearbss
 	jsr	clearzp

@@ -22,6 +22,9 @@
 	.import	wait_single_frame
 	.import	framecounter
 	.import imagecounter
+	.import imagebitmap
+	.import	image_clear_line
+	.import	image_clear_set
 	.import ciatimercopy
 	.import uncompress_next_image
 	.import animate_sprite
@@ -32,14 +35,14 @@
 	.import	ciatimer_init
 	.import ciatimer_retrieve
 	.import ciatimer_store
+	.importzp	tmpptr
+	.importzp	srcptr
+	.importzp	dstptr
+	.importzp	counter16
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
 
-	.exportzp	tmpptr
-	.exportzp	srcptr
-	.exportzp	dstptr
-	.exportzp	counter16
 	.export _main
 
 	.segment "LOADADDR"
@@ -47,11 +50,6 @@
 __LOADADDR__:	.word $0400
 
 	.zeropage
-srcptr:	.word	0
-dstptr:	.word	0
-srcend:	.word	0
-tmpptr:	.word	0
-counter16:	.word 0
 irqXsave:	.byte 0
 irqYsave:	.byte 0
 
@@ -105,7 +103,22 @@ mainloop:
 	SetScreenMemory $1800	; $D800
 	dec	$1		; RAM ONLY
 	cli
-	jsr	whiteout_whole_screen
+	;; 	jsr	whiteout_whole_screen
+	lda	#<imagebitmap
+	ldx	#>imagebitmap
+	jsr	image_clear_set
+	lda	#200/5
+	sta	$ff
+@l115:	jsr	wait_single_frame
+	jsr	image_clear_line
+	jsr	image_clear_line
+	jsr	image_clear_line
+	jsr	image_clear_line
+	jsr	image_clear_line
+	dec	$ff
+	bne	@l115
+	lda	#222
+	jsr	wait_for_framecounter
 displayloop:
 	jsr	uncompress_next_image
 ;;; 	jsr	copy_image2screen ; TODO: Or something else...
