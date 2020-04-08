@@ -22,23 +22,14 @@
 	.import	wait_single_frame
 	.import	framecounter
 	.import imagecounter
-	.import imagebitmap
-	.import	image_clear_line
-	.import	image_clear_set
-	.import ciatimercopy
 	.import uncompress_next_image
 	.import animate_sprite
 	.import copy_image2screen
 	.import colourin_screen
 	.import move_sprite0_horizontally
 	.import	copy_a_sprite
+	.import	irqroutine
 	.import	ciatimer_init
-	.import ciatimer_retrieve
-	.import ciatimer_store
-	.importzp	tmpptr
-	.importzp	srcptr
-	.importzp	dstptr
-	.importzp	counter16
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -50,8 +41,11 @@
 __LOADADDR__:	.word $0400
 
 	.zeropage
-irqXsave:	.byte 0
-irqYsave:	.byte 0
+srcptr:	.word	0
+dstptr:	.word	0
+srcend:	.word	0
+tmpptr:	.word	0
+counter16:	.word 0
 
 
 	.data
@@ -103,22 +97,7 @@ mainloop:
 	SetScreenMemory $1800	; $D800
 	dec	$1		; RAM ONLY
 	cli
-	;; 	jsr	whiteout_whole_screen
-	lda	#<imagebitmap
-	ldx	#>imagebitmap
-	jsr	image_clear_set
-	lda	#200/5
-	sta	$ff
-@l115:	jsr	wait_single_frame
-	jsr	image_clear_line
-	jsr	image_clear_line
-	jsr	image_clear_line
-	jsr	image_clear_line
-	jsr	image_clear_line
-	dec	$ff
-	bne	@l115
-	lda	#222
-	jsr	wait_for_framecounter
+	jsr	whiteout_whole_screen
 displayloop:
 	jsr	uncompress_next_image
 ;;; 	jsr	copy_image2screen ; TODO: Or something else...
@@ -146,34 +125,6 @@ colourin_whole_screen:
 	.endrepeat
 	rts
 
-
-irqroutine:
-	pha
-	stx	irqXsave
-	sty	irqYsave
-	lda	#$37		; Turn on I/O
-	sta	$1
-	jsr	move_sprite0_horizontally
-	jsr	ciatimer_store
-	jsr	$1003
-	jsr	ciatimer_retrieve
-	P_inc	framecounter	; Advance frame counter.
-	;; Copy the current timer information.
-	ldx	#3
-@l1:	lda	$dc04,x
-	sta	ciatimercopy,x
-	dex
-	bpl	@l1
-	;; Acknowledge IRQ.
-	asl	$d019
-	lda	#$34		; Turn to RAM only
-	sta	$1
-	;; Do all IRQ stuff here that needs the memory below I/O.
-	jsr	animate_sprite
-	ldy	irqYsave
-	ldx	irqXsave
-	pla
-	rti
 
 setupirq:
 	lda	#<irqroutine
