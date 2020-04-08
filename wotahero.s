@@ -22,16 +22,14 @@
 	.import	wait_single_frame
 	.import	framecounter
 	.import imagecounter
-	.import ciatimercopy
 	.import uncompress_next_image
 	.import animate_sprite
 	.import copy_image2screen
 	.import colourin_screen
 	.import move_sprite0_horizontally
 	.import	copy_a_sprite
+	.import	irqroutine
 	.import	ciatimer_init
-	.import ciatimer_retrieve
-	.import ciatimer_store
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -52,8 +50,6 @@ dstptr:	.word	0
 srcend:	.word	0
 tmpptr:	.word	0
 counter16:	.word 0
-irqXsave:	.byte 0
-irqYsave:	.byte 0
 
 
 	.data
@@ -133,34 +129,6 @@ colourin_whole_screen:
 	.endrepeat
 	rts
 
-
-irqroutine:
-	pha
-	stx	irqXsave
-	sty	irqYsave
-	lda	#$37		; Turn on I/O
-	sta	$1
-	jsr	move_sprite0_horizontally
-	jsr	ciatimer_store
-	jsr	$1003
-	jsr	ciatimer_retrieve
-	P_inc	framecounter	; Advance frame counter.
-	;; Copy the current timer information.
-	ldx	#3
-@l1:	lda	$dc04,x
-	sta	ciatimercopy,x
-	dex
-	bpl	@l1
-	;; Acknowledge IRQ.
-	asl	$d019
-	lda	#$34		; Turn to RAM only
-	sta	$1
-	;; Do all IRQ stuff here that needs the memory below I/O.
-	jsr	animate_sprite
-	ldy	irqYsave
-	ldx	irqXsave
-	pla
-	rti
 
 setupirq:
 	lda	#<irqroutine
