@@ -9,7 +9,6 @@
 	.import animate_sprite
 	.import move_sprite0_horizontally
 	.import	scroller_advance
-	.import	spriteregshadow
 	.import	spritescroller
 	.import spritepointer
 	.import	scroller_copypos2vic

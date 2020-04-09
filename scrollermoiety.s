@@ -2,7 +2,6 @@
 	.export	scroller_init
 	.export	scroller_advance
 	.export	scroller_copypos2vic
-	.export	spriteregshadow
 
 	.include	"pseudo16.inc"
 	.include	"memoryconfig.i"
@@ -21,10 +20,6 @@ scroller_text:
 	.byte	$ff
 
 	.bss
-spriteregshadow:
-	.res	8*2		; Sprite positions
-spriteregshadowmsb:
-	.res	1		; Sprite MSBs
 	
 	.data
 sprite_y_pos:	.byte	250-21*2
@@ -42,16 +37,8 @@ scrcounter16:	.res	2
 
 	.code
 scroller_init:
-	ldx	#0
-@l1:	lda	sprite_y_pos
-	sta	spriteregshadow+1,x
-	lda	#0
-	sta	spriteregshadow,x
-	inx
-	inx
-	cpx	#8*2
-	bne	@l1
 	rts
+
 	.data
 msbtab:
 	.byte	1,2,4,8,16,32,64,128
