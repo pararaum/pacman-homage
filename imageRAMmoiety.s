@@ -9,6 +9,8 @@
 	.export copy_image2screen
 	.export colourin_screen
 	.export whiteout_via_lfsr
+	.export	colourin_whole_screen
+	.export whiteout_whole_screen
 
 	.macpack	generic
 	.import	wait_single_frame
@@ -425,3 +427,23 @@ whiteout_via_lfsr:
 whiteout_via_lfsr_state:	.res	1
 
 	.code
+whiteout_whole_screen:
+	lda	#20
+	sta	@cnt
+@l:	jsr	whiteout_screen
+	jsr	wait_single_frame
+	dec	@cnt
+	bne	@l
+	rts
+@cnt:	.byte	0
+
+
+colourin_whole_screen:
+	lda	#20
+	sta	@cnt
+@l:	jsr	colourin_screen
+	jsr	wait_single_frame
+	dec	@cnt
+	bne	@l
+	rts
+@cnt:	.byte	0

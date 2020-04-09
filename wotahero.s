@@ -18,12 +18,13 @@
 	.import uncompress_next_image
 	.import animate_sprite
 	.import copy_image2screen
-	.import colourin_screen
 	.import move_sprite0_horizontally
 	.import	irqroutine
 	.import	ciatimer_init
 	.import scroller_init
 	.import whiteout_via_lfsr
+	.import whiteout_whole_screen
+	.import colourin_whole_screen
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -92,18 +93,6 @@ displayloop:
 	lda	#$34		; End after n*256 frames.
 	cmp	framecounter+1
 	jne	mainloop
-	rts
-whiteout_whole_screen:
-	.repeat	20
-	jsr	whiteout_screen
-	jsr	wait_single_frame
-	.endrepeat
-	rts
-colourin_whole_screen:
-	.repeat	20
-	jsr	colourin_screen
-	jsr	wait_single_frame
-	.endrepeat
 	rts
 
 
