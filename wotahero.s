@@ -31,6 +31,7 @@
 	.import	irqroutine
 	.import	ciatimer_init
 	.import scroller_init
+	.import whiteout_via_lfsr
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -99,7 +100,8 @@ mainloop:
 	SetScreenMemory $1800	; $D800
 	dec	$1		; RAM ONLY
 	cli
-	jsr	whiteout_whole_screen
+	;; 	jsr	whiteout_whole_screen
+	jsr	whiteout_via_lfsr
 displayloop:
 	jsr	uncompress_next_image
 ;;; 	jsr	copy_image2screen ; TODO: Or something else...
