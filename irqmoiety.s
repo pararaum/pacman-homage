@@ -29,7 +29,12 @@ irq_dispatch_idx:		; Index to the next interrupt routine.
 	.code
 run_action:
 	jsr	animate_sprite
+	memoryconfig_io
+	jsr	move_sprite0_horizontally
+	lda	#7
+	sta	$d027
 	rts
+
 play_muzak:
 	P_inc	framecounter	; Advance frame counter.
 	memoryconfig_io
@@ -60,8 +65,6 @@ copy_scroller_shadow:
 	stx	spritepointer+7
 	memoryconfig_io
 	;; 	jsr	move_sprite0_horizontally
-	lda	#$ff
-	sta	$d015		; Enable all sprites.
 	jsr	scroller_copypos2vic
 	rts
 irq_advance_scroller:

@@ -16,9 +16,7 @@
 	.import	wait_single_frame
 	.import	framecounter
 	.import uncompress_next_image
-	.import animate_sprite
 	.import copy_image2screen
-	.import move_sprite0_horizontally
 	.import	irqroutine
 	.import	ciatimer_init
 	.import scroller_init

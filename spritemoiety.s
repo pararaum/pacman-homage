@@ -2,16 +2,13 @@
 	.export move_sprite0_horizontally
 	.export	copy_a_sprite
 
+	.include	"pseudo16.inc"
+
 	.import	framecounter
 	.import spritepointer
 	.import	sprites
 
 	.macpack generic
-
-	.data
-;;; TODO: clean up this crap!
-sprite0pos:	.byte	50
-	.word	24
 
 	.code
 	;;; Copy a sprite into a sprite buffer.
@@ -44,20 +41,6 @@ copy_a_sprite:
 	bpl	@l1
 	rts
 
-	.code
-setsprite:
-	lda	sprite0pos
-	sta	$d000
-	lda	sprite0pos+1
-	sta	$d001
-	lda	sprite0pos+2
-	beq	@out
-	lda	#1
-	ora	$d010
-	sta	$d010
-	@out:
-	rts
-
 ;;; Animate the sprite pointer.
 ;;; Modifies: A/X/Y
 	.code
@@ -75,31 +58,38 @@ animate_sprite:
 	bne	@l
 	rts
 
+	.data
+;;; TODO: clean up this crap!
+sprite0pos:
+	.word	24
+	.byte	50
+
+	.code
+setsprite0:
+	lda	sprite0pos	; lo x-pos
+	sta	$d000
+	lda	sprite0pos+2	; y-pos
+	sta	$d001
+	lda	$d010		; MSB
+	and	#%11111110
+	ldx	sprite0pos+1	; hi x-pos
+	beq	@out
+	ora	#%00000001
+@out:
+	sta	$d010
+	rts
+
 	.code
 move_sprite0_horizontally:
-	lda	$d010		; MSB
-	and 	#%00000001	; MSB of sprite 0.
-	bne	@greater256
-	lda	$d000
-	add	#3
-	sta	$d000
-	bcs	@overflow
-	rts
-	@overflow:
-	lda	#%00000001
-	ora	$d010		; Set MSB of X position.
-	sta	$d010
-	rts
-	@greater256:
-	lda	$d000
-	add	#3
-	sta	$d000
+	jsr	setsprite0
+	P_inc	sprite0pos
+	P_inc	sprite0pos
+	P_inc	sprite0pos
+	lda	sprite0pos+1	; HI of x-pos
+	beq	@out
+	lda	sprite0pos
 	cmp	#345-256	; Out of right border?
 	bcc	@out		; No.
-	lda	#0		; Reset to zero
-	sta	$d000
-	lda	#%11111110
-	and	$d010		; Clear MSB of X position.
-	sta	$d010
-	@out:
+	P_loadi	sprite0pos,0
+@out:
 	rts
