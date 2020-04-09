@@ -3,6 +3,7 @@
 
 	.include	"vicmacros.i"
 	.include	"pseudo16.inc"
+	.include	"memoryconfig.i"
 	.macpack	longbranch
 	.macpack	cbm
 	.macpack	generic
@@ -64,8 +65,7 @@ _main:
 	jsr	setupirq
 	jsr	init
 	jsr	scroller_init
-	lda	#$34
-	sta	$1
+	memoryconfig_ram
 	lda	#($d000-$c000)/64
 	ldx	#0
 	clc
