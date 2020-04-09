@@ -57,6 +57,10 @@ counter16:	.word 0
 _main:
 	lda	#$0b
 	sta	$d020
+	lda	#%00111011	; Bitmap Mode.
+	sta	$d011
+	lda	#%00001000	; Single colour mode, 40 columns.
+	sta	$d016
 	jsr	setupirq
 	jsr	init
 	jsr	scroller_init

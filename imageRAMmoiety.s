@@ -1,6 +1,7 @@
 
 	.segment "IMAGE"
 	.export	sprites
+	.export	spritescroller
 	.export	imagecolours
 	.export	imagebitmap
 	.export	spritepointer
