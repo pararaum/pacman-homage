@@ -260,8 +260,8 @@ putch:	sta $aaaa	; ** parameter
 @l0:	rts
 
 
-
-table:	.byte 0,0,0,0,0,0,0
+	.bss
+table:	.byte 0,0,0,0,0,0,0,0
 	.byte 0,0,0,0,0,0,0,0
 	;dc.b 0,0,0,0,0,0,0,0
 	;dc.b 0,0,0,0,0,0,0,0
