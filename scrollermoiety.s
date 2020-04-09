@@ -196,3 +196,8 @@ scroller_copypos2vic:
 	dex
 	bpl	@l2
 	rts
+
+	;; https://sourceforge.net/p/cc65/mailman/message/32234634/
+	.feature force_range
+	.data
+	.byte	-1
