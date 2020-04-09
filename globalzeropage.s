@@ -4,6 +4,7 @@
 	.exportzp	srcptr
 	.exportzp	dstptr
 	.exportzp	counter16
+	.exportzp	tmp16
 
 	.zeropage
 	;; Pointers for many copy operations.
@@ -13,3 +14,4 @@ srcend:	.res	2
 tmpptr:	.res	2
 	;; A general counter.
 counter16:	.res	2
+tmp16:	.res	2
