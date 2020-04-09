@@ -12,6 +12,14 @@
 	.import	framecounter
 	.import	spritescroller
 
+	.data
+scroller_text:
+	scrcode	"tHE 7TH dIVISION PRESENTS 'wOT a hERO!', AN HOMAGE TO THE GAME pACmAN. tHIS GAME WAS DESIGNED IN 1980 BY tORU iWATANI! tHANK YOU FOR COUNTLESS HOURS OF FUN!"
+	.BYTE	"   "
+	scrcode "gREETINGS GO TO: aBYSS cONNECTION, cLASSIC vIDEOGAMES rADIO, gLOEGG, hAREKIET, cOYHOT, jASMIN68k, pINKAMENA, pHIWA, dOC.k, sISSIM."
+	.BYTE	"   "
+	.byte	$ff
+
 	.bss
 spriteregshadow:
 	.res	8*2		; Sprite positions
@@ -64,9 +72,9 @@ scroller_advance:
 	stx	@tmp
 	jsr	scroller_new_chars
 	ldx	@tmp
-	lda	#<(1+48*7+24+8)	; The left border has a width of 24 pixels.
+	lda	#<(1+48*8)	; Move to the end.
 	sta	real_sprite_xpos,x
-	lda	#>(1+48*7+24+8)
+	lda	#>(1+48*8)
 	sta	real_sprite_xpos+1,x
 @nounderflow:
 	inx
@@ -87,11 +95,6 @@ scroller_next_char:
 	lda	#' '
 @out:
 	rts
-
-	.data
-scroller_text:
-	scrcode	"tHIS IS SOME NICE AND COSY SCROLL TEST. eNJOY 'wOT a hERO!'!"
-	.byte	$ff
 
 	.code
 ;;; Input: A=sprite number
@@ -177,7 +180,11 @@ scroller_copypos2vic:
 	;; Copy colours.
 	lda	#12
 	ldx	#7
-@l2:	sta	$d027,x
+@l2:
+	;; 	txa
+	;; 	clc
+	;; 	adc	#1
+	sta	$d027,x
 	dex
 	bpl	@l2
 	rts

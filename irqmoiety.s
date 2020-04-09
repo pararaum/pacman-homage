@@ -57,6 +57,8 @@ copy_scroller_shadow:
 	stx	spritepointer+5
 	inx
 	stx	spritepointer+6
+	inx
+	stx	spritepointer+7
 	memoryconfig_io
 	;; 	jsr	move_sprite0_horizontally
 	lda	#$ff
