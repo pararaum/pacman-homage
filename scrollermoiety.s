@@ -11,6 +11,8 @@
 	.import	framecounter
 	.import	spritescroller
 
+	scroller_centerline = $d7
+
 	.data
 scroller_text:
 	scrcode	"tHE 7TH dIVISION PRESENTS 'wOT a hERO!', AN HOMAGE TO THE GAME pACmAN. tHIS GAME WAS DESIGNED IN 1980 BY tORU iWATANI! tHANK YOU FOR COUNTLESS HOURS OF FUN!"
@@ -20,6 +22,7 @@ scroller_text:
 	.byte	$ff
 
 	.bss
+sinusidx:	.res	1
 	
 	.data
 sprite_y_pos:	.byte	250-21*2
@@ -27,6 +30,15 @@ real_sprite_xpos:
 	.word	1+48*0, 1+48*1, 1+48*2, 1+48*3, 1+48*4, 1+48*5, 1+48*6, 1+48*7
 font:
 	.incbin	"zdemo.pbm",10
+;   (let (value)
+;   (dotimes (number 64 value)
+;     (setq value
+;        (concat value
+;                (format "$%x, " (logand #xff ( + 256 (truncate (* 14 (sin (* 2 pi (/ number 63.0))))))))
+;                )
+;        )))
+	;; Grrr, no signed constants in ca65!?
+sinus:	.byte $0, $1, $2, $4, $5, $6, $7, $8, $a, $a, $b, $c, $d, $d, $d, $d, $d, $d, $d, $d, $c, $c, $b, $a, $9, $8, $7, $6, $4, $3, $2, $0, $0, $fe, $fd, $fc, $fa, $f9, $f8, $f7, $f6, $f5, $f4, $f4, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f4, $f5, $f6, $f6, $f8, $f9, $fa, $fb, $fc, $fe, $ff, $0
 
 	.zeropage
 tmpxpos:	.res	2
@@ -37,6 +49,8 @@ scrcounter16:	.res	2
 
 	.code
 scroller_init:
+	lda	#0
+	sta	sinusidx
 	rts
 
 	.data
@@ -132,6 +146,13 @@ scroller_new_chars:
 	rts
 
 scroller_copypos2vic:
+	inc	sinusidx	; Get the sinus.
+	lda	sinusidx
+	and	#$3f
+	tax
+	lda	sinus,x
+	add	#scroller_centerline
+	sta	sprite_y_pos
 	ldx	#0
 	stx	$d010		; Clear all MSBs!
 @l:	lda	sprite_y_pos
