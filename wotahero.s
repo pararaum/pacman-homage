@@ -95,15 +95,10 @@ mainloop:
 	sta	$d020
 	dec	$1
 	cli
+	jsr	copy_image2screen
 	;; Now wait some time before the displayloop begins.
 	lda	#$2
 	jsr	wait_for_framecounter
-	jsr	copy_image2screen
-	sei
-	inc	$1		; I/O on
-	SetScreenMemory $1800	; $D800
-	dec	$1		; RAM ONLY
-	cli
 	;; 	jsr	whiteout_whole_screen
 	jsr	whiteout_via_lfsr
 displayloop:
@@ -175,7 +170,7 @@ init:
 	lda	#%00111011	; https://www.c64-wiki.de/wiki/VIC
 	sta	$d011
 	SetBitmapAddress $2000
-	SetScreenMemory $1c00
+	SetScreenMemory $1800
 	lda	#0
 	jsr	sidMuzakInit
 	lda	#50		; Position of sprite 0
@@ -191,7 +186,7 @@ init:
 	sta	$d010		; MSB is zero of all sprites.
 	sta	$d01b		; Sprites have priority.
 	sta	$d01c		; Single colour sprites.
-	lda	#$01		; Turn sprites on.
+	lda	#$ff		; Turn sprites on.
 	sta	$d015
 	lda	#$ff		; Make them big.
 	sta	$d017
