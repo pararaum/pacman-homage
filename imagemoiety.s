@@ -13,7 +13,6 @@
 	.import	unpucrunch
 	.import imagecounter
 
-	.export	imageTableLO, imageTableHI
 	.export uncompress_next_image
 
 	.data

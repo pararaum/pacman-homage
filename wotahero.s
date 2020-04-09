@@ -8,27 +8,18 @@
 	.macpack	cbm
 	.macpack	generic
 
-	.import	sidmusic
 	.import unpucrunch
-	.import	image_iwatani
 	.import	shuffle_image_memory
-	.import	imageTableHI
-	.import imageTableLO
-	.import no_of_story_images
-	.import sprite_0,sprite_1,sprite_2,sprite_3
 	.import	sprites
-	.import	spritepointer
 	.import whiteout_screen
 	.import wait_for_framecounter
 	.import	wait_single_frame
 	.import	framecounter
-	.import imagecounter
 	.import uncompress_next_image
 	.import animate_sprite
 	.import copy_image2screen
 	.import colourin_screen
 	.import move_sprite0_horizontally
-	.import	copy_a_sprite
 	.import	irqroutine
 	.import	ciatimer_init
 	.import scroller_init
@@ -66,19 +57,6 @@ _main:
 	jsr	init
 	jsr	scroller_init
 	memoryconfig_ram
-	lda	#($d000-$c000)/64
-	ldx	#0
-	clc
-	sta	spritepointer,x
-	inx
-	adc	#1
-	sta	spritepointer,x
-	inx
-	adc	#1
-	sta	spritepointer,x
-	inx
-	adc	#1
-	sta	spritepointer,x
 	cli
 mainloop:
 	sei
