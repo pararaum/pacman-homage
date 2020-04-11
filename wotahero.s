@@ -46,8 +46,9 @@ counter16:	.word 0
 
 	.code
 _main:
-	lda	#$0b
+	lda	#$0
 	sta	$d020
+	sta	$d021
 	lda	#%00111011	; Bitmap Mode.
 	sta	$d011
 	lda	#%00001000	; Single colour mode, 40 columns.
@@ -68,8 +69,7 @@ mainloop:
 	@ok84:
 	.endif
 	inc	$1		; I/O on
-	lda	#$f
-	sta	$d020
+	;; I/O stuff.
 	dec	$1
 	cli
 	jsr	copy_image2screen
