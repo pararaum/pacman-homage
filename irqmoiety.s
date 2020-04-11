@@ -22,7 +22,7 @@ irqYsave:	.byte 0
 	.define	IrqsTable	run_action-1,play_muzak-1,copy_scroller_shadow-1,irq_advance_scroller-1
 irqTableLO:	.lobytes	IrqsTable
 irqTableHI:	.hibytes	IrqsTable
-irqTable_pos:	.byte	37,105,171,248
+irqTable_pos:	.byte	40,105,171,248
 irq_dispatch_idx:		; Index to the next interrupt routine.
 	.byte	0
 
@@ -81,7 +81,7 @@ irq_advance_scroller:
 	lda	$d011
 	ora	#%00001000
 	sta	$d011
-	lda	#$0d+9		; Wait until the end of the scroller (?) and turn the sprites off. Otherwise we get "ghost images" in the upper border...
+	lda	#$0d+10		; Wait until the end of the scroller (?) and turn the sprites off. Otherwise we get "ghost images" in the upper border...
 @l:	cmp	$d012
 	bne	@l
 	lda	#$0
