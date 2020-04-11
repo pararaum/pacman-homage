@@ -22,7 +22,7 @@ irqYsave:	.byte 0
 	.define	IrqsTable	run_action-1,play_muzak-1,copy_scroller_shadow-1,irq_advance_scroller-1
 irqTableLO:	.lobytes	IrqsTable
 irqTableHI:	.hibytes	IrqsTable
-irqTable_pos:	.byte	17,105,171,253
+irqTable_pos:	.byte	17,105,171,248
 irq_dispatch_idx:		; Index to the next interrupt routine.
 	.byte	0
 
@@ -67,8 +67,19 @@ copy_scroller_shadow:
 	;; 	jsr	move_sprite0_horizontally
 	jsr	scroller_copypos2vic
 	rts
+
 irq_advance_scroller:
+	memoryconfig_io
+	lda	$d011
+	and	#%11110111
+	sta	$d011
+	memoryconfig_ram
 	jsr	scroller_advance
+	memoryconfig_io
+	lda	$d011
+	ora	#%00001000
+	sta	$d011
+	memoryconfig_ram
 	rts
 
 	.code
@@ -84,6 +95,9 @@ irqroutine:
 	ldx	irq_dispatch_idx; Which is the next interrupt routine?
 	lda	irqTable_pos,x	; Get the next raster-line position.
 	sta	$d012		; Set IRQ @ next position.
+	lda	$d011
+	and	#%01111111
+	sta	$d011
 	memoryconfig_ram
 	ldy	irqYsave
 	ldx	irqXsave
