@@ -11,7 +11,7 @@
 	.import	framecounter
 	.import	spritescroller
 
-	scroller_centerline = $d7
+	scroller_centerline = $fb
 
 	.data
 scroller_text:
