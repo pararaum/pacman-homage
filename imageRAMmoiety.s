@@ -152,11 +152,11 @@ spritepointer:
 	.res	8
 imagecolours:
 	;; Screen Ram, positioned in the file after the 8000 bytes of the bitmap.
-	.incbin	"toru_iwatani.bw.c64",8000,1000
+	.incbin	"helloscreen.c64",8000,1000
 	.res	24		; Empty space
 imagebitmap:
 	;; Here comes the bitmap, the first 8000 bytes of the file.
-	.incbin	"toru_iwatani.bw.c64",0,8000
+	.incbin	"helloscreen.c64",0,8000
 
 	.data
 whiteout_colour:		; This is the colour value to use for the "whiteout_*" functions.
