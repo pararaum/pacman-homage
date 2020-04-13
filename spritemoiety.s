@@ -1,4 +1,5 @@
 	.export animate_sprite
+	.export	animate_sprite_sequence
 	.export move_sprite0_horizontally
 	.export	copy_a_sprite
 
@@ -48,16 +49,27 @@ animate_sprite:
 	lda	framecounter
 	lsr
 	lsr
+	ldx	animate_sprite_sequence
+	beq	@szero
+	lsr
+	and	#1
+	add	#4		; Jump to the ghost sprites.
+	jmp	@animate
+@szero:
 	and	#$03
+@animate:	
 	add	#($d000-$c000)/64
 	ldx	#0
-	@l:
+@l:
 	sta	spritepointer,x
 	inx
 	cpx	#4
 	bne	@l
 	rts
-
+	.data
+animate_sprite_sequence:
+	.byte	0		; This is animation sequence to be used.
+	
 	.data
 ;;; TODO: clean up this crap!
 sprite0pos:

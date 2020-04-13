@@ -23,6 +23,7 @@
 	.import whiteout_via_lfsr
 	.import whiteout_whole_screen
 	.import colourin_whole_screen
+	.import animate_sprite_sequence
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -75,6 +76,9 @@ mainloop:
 	;; 	jsr	whiteout_whole_screen
 	jsr	whiteout_via_lfsr
 displayloop:
+	lda	animate_sprite_sequence
+	eor	#1
+	sta	animate_sprite_sequence
 	jsr	uncompress_next_image
 ;;; 	jsr	copy_image2screen ; TODO: Or something else...
 	jsr	colourin_whole_screen
