@@ -59,12 +59,11 @@ animate_sprite:
 	and	#$03
 @animate:	
 	add	#($d000-$c000)/64
-	ldx	#0
+	ldx	#8-1
 @l:
 	sta	spritepointer,x
-	inx
-	cpx	#4
-	bne	@l
+	dex
+	bpl	@l
 	rts
 	.data
 animate_sprite_sequence:
