@@ -29,10 +29,6 @@
 
 	.export _main
 
-	.segment "LOADADDR"
-	.export __LOADADDR__
-__LOADADDR__:	.word $0400
-
 	.zeropage
 srcptr:	.word	0
 dstptr:	.word	0
