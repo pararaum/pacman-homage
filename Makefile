@@ -31,12 +31,12 @@ clean:
 	rm -f wotahero wotahero.prg wotahero.map wotahero.vicelabel putest *.o *.pucr
 
 run:	wotahero
-	@echo  '\nbank ram \nl "wotahero" 0 \ng 0400\n' | nc -N localhost 6510
+	@echo  '\nbank ram \nl "wotahero" 0 \ng 03FC\n' | nc -N localhost 6510
 
 debug:
 	@(nc localhost 6510; exit 0)
 
 crunch:	wotahero
-	./pucrunch/pucrunch -x '$$400' wotahero wotahero.prg
+	./pucrunch/pucrunch -x '$$3fc' wotahero wotahero.prg
 
 .PHONY:	wotahero clean crunch debug run
