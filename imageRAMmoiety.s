@@ -164,7 +164,51 @@ ghostsprite_1:
 	.byte $44, $82, $40 
 	.byte $81
 
-	.res	64*2
+	.byte $01, $FE, $00 
+	.byte $0F, $FF, $80 
+	.byte $1F, $FF, $C0 
+	.byte $7F, $FF, $F0 
+	.byte $FF, $FF, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FF, $FF, $F8 
+	.byte $FF, $FF, $F8 
+	.byte $FE, $FE, $78 
+	.byte $F8, $1C, $F8 
+	.byte $F3, $81, $F8 
+	.byte $F3, $E1, $F8 
+	.byte $F7, $FF, $F8 
+	.byte $FF, $EF, $F0 
+	.byte $DD, $EE, $70 
+	.byte $8C, $C6, $60 
+	.byte $88, $44, $20 
+	.byte $88, $44, $20 
+	.byte $81
+	;; spriteconv -x 72 ghost.gif 
+	.byte $01, $FE, $00 
+	.byte $0F, $FF, $80 
+	.byte $1F, $FF, $C0 
+	.byte $7F, $FF, $F0 
+	.byte $FF, $FF, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FE, $38, $F8 
+	.byte $FF, $FF, $F8 
+	.byte $FF, $FF, $F8 
+	.byte $FE, $FE, $78 
+	.byte $F8, $1C, $F8 
+	.byte $F3, $81, $F8 
+	.byte $F3, $E1, $F8 
+	.byte $F7, $FF, $F8 
+	.byte $FF, $EF, $F0 
+	.byte $DD, $EE, $70 
+	.byte $4C, $C6, $60 
+	.byte $44, $82, $40 
+	.byte $44, $82, $40 
+	.byte $81
 
 spritescroller:
 	.res	64*8		; 512

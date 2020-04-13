@@ -52,7 +52,7 @@ animate_sprite:
 	ldx	animate_sprite_sequence
 	beq	@szero
 	lsr
-	and	#1
+	and	#3
 	add	#4		; Jump to the ghost sprites.
 	jmp	@animate
 @szero:
