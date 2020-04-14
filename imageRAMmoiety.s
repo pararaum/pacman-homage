@@ -6,11 +6,13 @@
 	.export	imagebitmap
 	.export	spritepointer
 	.export	whiteout_screen
+	.export	whiteout_colour
 	.export copy_image2screen
 	.export colourin_screen
 	.export whiteout_via_lfsr
 	.export	colourin_whole_screen
 	.export whiteout_whole_screen
+	.export screen4col
 
 	.macpack	generic
 	.import	wait_single_frame

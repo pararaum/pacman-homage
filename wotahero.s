@@ -24,6 +24,7 @@
 	.import whiteout_whole_screen
 	.import colourin_whole_screen
 	.import animate_sprite_sequence
+	.import	whiteout_spiral
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -74,7 +75,8 @@ mainloop:
 	lda	#$2
 	jsr	wait_for_framecounter
 	;; 	jsr	whiteout_whole_screen
-	jsr	whiteout_via_lfsr
+	;; 	jsr	whiteout_via_lfsr
+	jsr	whiteout_spiral
 displayloop:
 	lda	animate_sprite_sequence
 	eor	#1
@@ -84,7 +86,7 @@ displayloop:
 	jsr	colourin_whole_screen
 	lda	#$2
 	jsr	wait_for_framecounter
-	jsr	whiteout_whole_screen
+	jsr	whiteout_spiral
 	cmp	#0
 	bne	displayloop
 	;;
