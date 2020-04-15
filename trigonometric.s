@@ -1,5 +1,8 @@
 
 	.export	sinustable128
+	.export	sinus
+	.export cosinus
+
 	;; GHCI
 	;; let angles = [i*2*pi/128 | i <- [0..127]]
 	;; let sins = map (round . (*) 80 . sin) angles
@@ -8,6 +11,24 @@
 ;  Prelude Data.List> map (\l -> (head l, length l)) $ group $  map (uncurry (flip (-))) $ zip sins $ tail sins
 ;  [(4,4),(3,1),(4,3),(3,1),(4,1),(3,2),(4,1),(3,3),(2,1),(3,1),(2,1),(3,1),(2,2),(1,1),(2,1),(1,1),(2,1),(1,1),(0,1),(1,2),(0,4),(-1,2),(0,1),(-1,1),(-2,1),(-1,1),(-2,1),(-1,1),(-2,2),(-3,1),(-2,1),(-3,1),(-2,1),(-3,3),(-4,1),(-3,2),(-4,1),(-3,1),(-4,3),(-3,1),(-4,8),(-3,1),(-4,3),(-3,1),(-4,1),(-3,2),(-4,1),(-3,3),(-2,1),(-3,1),(-2,1),(-3,1),(-2,2),(-1,1),(-2,1),(-1,1),(-2,1),(-1,1),(0,1),(-1,2),(0,4),(1,2),(0,1),(1,1),(2,1),(1,1),(2,1),(1,1),(2,2),(3,1),(2,1),(3,1),(2,1),(3,3),(4,1),(3,2),(4,1),(3,1),(4,3),(3,1),(4,3)]
 
+	.code
+;;; Get a sinus value.
+;;; Input: A=angle φ
+;;; Output: A=sin(φ)
+;;; Modifies: A/X
+sinus:
+	and	#127		; 128 is a "full circle".
+	tax
+	lda	sinustable128,x
+	rts
+
+cosinus:
+	clc
+	adc	#128/4		; π/2 in radiants...
+	and	#127		; 128 is a "full circle".
+	tax
+	lda	sinustable128,x
+	rts
 
 	.feature	force_range
 
