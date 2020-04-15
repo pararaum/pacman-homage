@@ -25,6 +25,7 @@
 	.import colourin_whole_screen
 	.import animate_sprite_sequence
 	.import	whiteout_spiral
+	.import	colourin_spiral
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -83,7 +84,8 @@ displayloop:
 	sta	animate_sprite_sequence
 	jsr	uncompress_next_image
 ;;; 	jsr	copy_image2screen ; TODO: Or something else...
-	jsr	colourin_whole_screen
+	;; 	jsr	colourin_whole_screen
+	jsr	colourin_spiral
 	lda	#$2
 	jsr	wait_for_framecounter
 	jsr	whiteout_spiral
