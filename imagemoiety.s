@@ -61,7 +61,7 @@ image_cr_story19:
 imageTableLO:	.lobytes	ImageTable
 imageTableHI:	.hibytes	ImageTable
 no_of_story_images:
-	.byte	no_of_story_images-imageTableHI
+	.byte	no_of_story_images-imageTableHI+1
 
 	.code
 ;;; Uncompress the next image to $DC00-$FF3F. Cycles the images after the last image was found.
