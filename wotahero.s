@@ -20,6 +20,7 @@
 	.import	irqroutine
 	.import	ciatimer_init
 	.import scroller_init
+	.import colourin_via_lfsr
 	.import whiteout_via_lfsr
 	.import whiteout_whole_screen
 	.import colourin_whole_screen
@@ -66,6 +67,7 @@ mainloop:
 	beq	@ok84
 	.byte	$52
 	@ok84:
+	pla
 	.endif
 	inc	$1		; I/O on
 	;; I/O stuff.
@@ -73,28 +75,42 @@ mainloop:
 	cli
 	jsr	copy_image2screen
 	;; Now wait some time before the displayloop begins.
-	lda	#$2
+	.ifdef	DDEBUG
+	lda	#$1
+	.else
+	lda	#$4
+	.endif
 	jsr	wait_for_framecounter
-	;; 	jsr	whiteout_whole_screen
-	;; 	jsr	whiteout_via_lfsr
-	jsr	whiteout_spiral
 displayloop:
-	lda	animate_sprite_sequence
-	eor	#1
-	sta	animate_sprite_sequence
+	;; Spiral
+	jsr	whiteout_spiral
 	jsr	uncompress_next_image
-;;; 	jsr	copy_image2screen ; TODO: Or something else...
-	;; 	jsr	colourin_whole_screen
+	cmp	#0
+	jeq	@end
 	jsr	colourin_spiral
 	lda	#$2
 	jsr	wait_for_framecounter
-	jsr	whiteout_spiral
+	;; LFSR
+	jsr	whiteout_via_lfsr
+	jsr	uncompress_next_image
 	cmp	#0
-	bne	displayloop
-	;;
-	lda	#$34		; End after n*256 frames.
-	cmp	framecounter+1
-	jne	mainloop
+	jeq	@end
+	jsr	colourin_via_lfsr
+	lda	#$2
+	jsr	wait_for_framecounter
+	lda	animate_sprite_sequence
+	eor	#1
+	sta	animate_sprite_sequence
+	;; vartical bars
+	jsr	whiteout_whole_screen
+	jsr	uncompress_next_image
+	cmp	#0
+	jeq	@end
+	jsr	colourin_whole_screen
+	lda	#$2
+	jsr	wait_for_framecounter
+	jmp	displayloop
+@end:	;;
 	rts
 
 
