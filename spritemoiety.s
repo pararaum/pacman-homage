@@ -126,6 +126,8 @@ circular_flight_spr0:
 	jsr	setsprite0
 	P_loadi	sprite0pos,50+320/2-42
 	lda	cfcounter
+	lsr
+	add	#16
 	jsr	sinus
 	sta	cf_tmp		; Store LO of sinus in temporary.
 	ldx	#0
