@@ -2,6 +2,7 @@
 	.export	animate_sprite_sequence
 	.export move_sprite0_horizontally
 	.export	copy_a_sprite
+	.export spritemsbtab
 
 	.include	"pseudo16.inc"
 
@@ -10,6 +11,10 @@
 	.import	sprites
 
 	.macpack generic
+
+	.data
+spritemsbtab:
+	.byte	1,2,4,8,16,32,64,128
 
 	.code
 	;;; Copy a sprite into a sprite buffer.
