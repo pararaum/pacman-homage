@@ -14,6 +14,8 @@
 	.export	colourin_whole_screen
 	.export whiteout_whole_screen
 	.export screen4col
+	.export screen0
+	.export fill_screenram
 
 	.macpack	generic
 	.import	wait_single_frame
@@ -561,3 +563,15 @@ colourin_whole_screen:
 	bne	@l
 	rts
 @cnt:	.byte	0
+
+
+	
+fill_screenram:
+	ldx	#0
+@l:	sta	screen4col,x
+	sta	screen4col+$100,x
+	sta	screen4col+$200,x
+	sta	screen4col+$300-24,x
+	dex
+	bne	@l
+	rts
