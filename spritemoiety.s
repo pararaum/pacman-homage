@@ -2,16 +2,25 @@
 	.export	animate_sprite_sequence
 	.export move_sprite0_horizontally
 	.export	copy_a_sprite
+	.export spritemsbtab
+	.export circular_flight_spr0
 
 	.include	"pseudo16.inc"
 
 	.import	framecounter
 	.import spritepointer
 	.import	sprites
+	.import	sinus
+	.import cosinus
 
 	.macpack generic
 
+	.data
+spritemsbtab:
+	.byte	1,2,4,8,16,32,64,128
+
 	.code
+	;; TODO: Check if needed...
 	;;; Copy a sprite into a sprite buffer.
 ;;; Input: A/X=pointer to sprite data, Y=Number of sprite buffer relative to "sprites".
 ;;; Changes: A/X
@@ -104,3 +113,37 @@ move_sprite0_horizontally:
 	P_loadi	sprite0pos,0
 @out:
 	rts
+
+	;; Let's fly in circles
+
+	.bss
+cfcounter:	.res	1	; Circular flight counter
+
+	.code
+;;; Circular flight for sprite 0
+circular_flight_spr0:
+	jsr	setsprite0
+	P_loadi	sprite0pos,50+320/2-42
+	lda	cfcounter
+	lsr
+	add	#16
+	jsr	sinus
+	sta	cf_tmp		; Store LO of sinus in temporary.
+	ldx	#0
+	cmp	#0		; Sign extend the sinus
+	bpl	@s1
+	ldx	#$FF
+@s1:
+	stx	cf_tmp+1
+	P_add	cf_tmp,sprite0pos
+	lda	cfcounter
+	jsr	cosinus
+	cmp	#$80		; The following two instruction are a ASR.
+	ror
+	add	#80+20
+	sta	sprite0pos+2
+	inc	cfcounter
+	rts
+
+	.data
+cf_tmp:	.word	$0

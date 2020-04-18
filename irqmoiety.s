@@ -12,6 +12,7 @@
 	.import	spritescroller
 	.import spritepointer
 	.import	scroller_copypos2vic
+	.import	circular_flight_spr0
 
 	.zeropage
 irqXsave:	.byte 0
@@ -22,7 +23,7 @@ irqYsave:	.byte 0
 	.define	IrqsTable	run_action-1,play_muzak-1,copy_scroller_shadow-1,irq_advance_scroller-1
 irqTableLO:	.lobytes	IrqsTable
 irqTableHI:	.hibytes	IrqsTable
-irqTable_pos:	.byte	40,105,171,248
+irqTable_pos:	.byte	40,105,201,248
 irq_dispatch_idx:		; Index to the next interrupt routine.
 	.byte	0
 
@@ -30,7 +31,8 @@ irq_dispatch_idx:		; Index to the next interrupt routine.
 run_action:
 	jsr	animate_sprite
 	memoryconfig_io
-	jsr	move_sprite0_horizontally
+	;; 	jsr	move_sprite0_horizontally
+	jsr	circular_flight_spr0
 	lda	#7
 	sta	$d027
 	lda	#$ff

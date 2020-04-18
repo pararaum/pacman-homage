@@ -10,6 +10,7 @@
 
 	.import	framecounter
 	.import	spritescroller
+	.import spritemsbtab
 
 	scroller_centerline = $fb
 
@@ -52,10 +53,6 @@ scroller_init:
 	lda	#0
 	sta	sinusidx
 	rts
-
-	.data
-msbtab:
-	.byte	1,2,4,8,16,32,64,128
 
 	.code
 scroller_advance:
@@ -177,7 +174,7 @@ scroller_copypos2vic:
 	txa
 	lsr
 	tay
-	lda	msbtab,y
+	lda	spritemsbtab,y
 	ora	$d010
 	sta	$d010
 @nosetmsb:

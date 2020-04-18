@@ -6,11 +6,16 @@
 	.export	imagebitmap
 	.export	spritepointer
 	.export	whiteout_screen
+	.export	whiteout_colour
 	.export copy_image2screen
 	.export colourin_screen
+	.export colourin_via_lfsr
 	.export whiteout_via_lfsr
 	.export	colourin_whole_screen
 	.export whiteout_whole_screen
+	.export screen4col
+	.export screen0
+	.export fill_screenram
 
 	.macpack	generic
 	.import	wait_single_frame
@@ -492,6 +497,48 @@ whiteout_via_lfsr:
 	sta	screen4col+$0300-8,x
 	rts
 
+colourin_via_lfsr:
+	lda	#$a9
+	sta	whiteout_via_lfsr_state
+@loop:	jsr	@advance
+	jsr	@store
+	lda	whiteout_via_lfsr_state
+	cmp	#$a9		; At the beginning?
+	beq	@out
+	jsr	@advance
+	jsr	@store
+	lda	whiteout_via_lfsr_state
+	cmp	#$a9		; At the beginning?
+	beq	@out
+	jsr	@advance
+	jsr	@store
+	jsr	wait_single_frame
+	lda	whiteout_via_lfsr_state
+	cmp	#$a9		; At the beginning?
+	bne	@loop
+@out:	rts
+@advance:
+	lsr	whiteout_via_lfsr_state
+	bcc	@skip
+	lda	whiteout_via_lfsr_state
+	eor	#$e1
+	sta	whiteout_via_lfsr_state
+@skip:
+	rts
+@store:
+	lda	whiteout_via_lfsr_state
+	tax
+	lda	imagecolours-1,x
+	sta	screen4col-1,x
+	lda	imagecolours+$0100-3,x
+	sta	screen4col+$0100-3,x
+	lda	imagecolours+$0200-5,x
+	sta	screen4col+$0200-5,x
+	lda	imagecolours+$0300-8,x
+	sta	screen4col+$0300-8,x
+	rts
+
+
 	.bss
 whiteout_via_lfsr_state:	.res	1
 
@@ -516,3 +563,15 @@ colourin_whole_screen:
 	bne	@l
 	rts
 @cnt:	.byte	0
+
+
+	
+fill_screenram:
+	ldx	#0
+@l:	sta	screen4col,x
+	sta	screen4col+$100,x
+	sta	screen4col+$200,x
+	sta	screen4col+$300-24,x
+	dex
+	bne	@l
+	rts
