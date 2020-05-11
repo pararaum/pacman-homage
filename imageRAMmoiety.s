@@ -16,6 +16,7 @@
 	.export screen4col
 	.export screen0
 	.export fill_screenram
+	.export	fill_colourram
 
 	.macpack	generic
 	.import	wait_single_frame
@@ -572,6 +573,19 @@ fill_screenram:
 	sta	screen4col+$100,x
 	sta	screen4col+$200,x
 	sta	screen4col+$300-24,x
+	dex
+	bne	@l
+	rts
+
+;;; Fill the colour RAM.
+;;; Input: A=colour
+;;; Modifies: A/X
+fill_colourram:
+	ldx	#0
+@l:	sta	$d800,x
+	sta	$d900,x
+	sta	$da00,x
+	sta	$db00,x
 	dex
 	bne	@l
 	rts

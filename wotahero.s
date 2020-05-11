@@ -28,6 +28,7 @@
 	.import	whiteout_spiral
 	.import	colourin_spiral
 	.import	fill_screenram
+	.import wavyinterlude
 
 	sidMuzakInit = $1000
 	sidMuzakPlay = $1003
@@ -82,7 +83,8 @@ mainloop:
 	lda	#$4
 	.endif
 	jsr	wait_for_framecounter
-	jsr	interlude
+	jsr	wavyinterlude
+	;; 	jsr	interlude
 displayloop:
 	;; Spiral
 	jsr	whiteout_spiral
