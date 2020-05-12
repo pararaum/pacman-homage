@@ -1,4 +1,4 @@
-
+	.export reset_framecounter
 	.export	wait_for_framecounter
 	.export	framecounter
 	.export	wait_single_frame
@@ -7,6 +7,16 @@
 framecounter:	.res	2	; Reserve a word
 
 	.code
+;;; Reset the framecounter to zero.
+;;; Input: -
+;;; Modifies: A
+;;; Output: A=0
+reset_framecounter:
+	lda	#0
+	sta	framecounter
+	sta	framecounter+1
+	rts
+
 ;;; Wait until the framecounter reaches a value, clear to zero afterwards. Only high byte!
 ;;; Input:
 ;;;	A: High value to wait for

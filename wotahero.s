@@ -4,6 +4,7 @@
 	.include	"vicmacros.i"
 	.include	"pseudo16.inc"
 	.include	"memoryconfig.i"
+	.include	"tools.i"
 	.macpack	longbranch
 	.macpack	cbm
 	.macpack	generic
@@ -12,9 +13,6 @@
 	.import	shuffle_image_memory
 	.import	sprites
 	.import whiteout_screen
-	.import wait_for_framecounter
-	.import	wait_single_frame
-	.import	framecounter
 	.import uncompress_next_image
 	.import copy_image2screen
 	.import	irqroutine
@@ -84,6 +82,7 @@ mainloop:
 	jsr	wait_for_framecounter
 	jsr	wavyinterlude
 	jsr	wavyinterlude
+	jsr	reset_framecounter
 	;; 	jsr	interlude
 displayloop:
 	;; Spiral
