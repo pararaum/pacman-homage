@@ -29,9 +29,8 @@
 	.import	colourin_spiral
 	.import	fill_screenram
 	.import wavyinterlude
+	.import	sidMuzakInit
 
-	sidMuzakInit = $1000
-	sidMuzakPlay = $1003
 
 	.export _main
 
@@ -83,6 +82,7 @@ mainloop:
 	lda	#$4
 	.endif
 	jsr	wait_for_framecounter
+	jsr	wavyinterlude
 	jsr	wavyinterlude
 	;; 	jsr	interlude
 displayloop:

@@ -13,6 +13,7 @@
 	.import spritepointer
 	.import	scroller_copypos2vic
 	.import	circular_flight_spr0
+	.import sidMuzakPlay
 
 	.zeropage
 irqXsave:	.byte 0
@@ -43,7 +44,7 @@ play_muzak:
 	P_inc	framecounter	; Advance frame counter.
 	memoryconfig_io
 	jsr	ciatimer_store
-	jsr	$1003
+	jsr	sidMuzakPlay
 	jsr	ciatimer_retrieve
 	rts
 

@@ -19,6 +19,9 @@ pacman:
         .incbin "image.40x25.pac-man.pbm",9
 ghost:
         .incbin "image.40x25.ghost.pbm",9
+wavy_image_counter:
+	.byte	0
+
 
 	.bss
 wavecounter:
@@ -57,9 +60,18 @@ wavyinterlude:
 	jsr	whiteout_whole_screen
 	jsr	wavymation_copy_font
 	jsr	setup_vic
+	inc	wavy_image_counter
+	lda	wavy_image_counter
+	lsr
+	bcc	@even_image
 	;; Setup the screen pointer and the wavy effect.
 	lda	#<pacman
 	ldx	#>pacman
+	bcs	@skip		; Carry not changed from above.
+@even_image:
+	lda	#<ghost
+	ldx	#>ghost
+@skip:
 	jsr     wavymation_generate_image
 	lda	#5*60/3
 	sta	wavecounter
