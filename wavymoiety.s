@@ -12,6 +12,7 @@
 	.import wavymation_copy_font
 	.import wavymation_animate_font
 	.import fill_colourram
+	.import fill_screenram
 	.import wait_single_frame
 
 	.data
@@ -39,7 +40,7 @@ setup_vic:
 	sta	$d016
 	lda	#<(((screen4col-$c000)/64)|((imagebitmap-$c000)/1024))
 	sta	$d018
-	lda	#$0f
+	lda	#$00
 	jsr	fill_colourram
 	memoryconfig_ram
 	cli
@@ -47,6 +48,12 @@ setup_vic:
 
 wavyinterlude:
 	sei
+	;; The screen is filled with $ff (hires light gray foreground, light gray background). We clear this character to remove artifacts.
+	lda	#0
+	ldx	#7
+@cf:	sta	wavymation_chargenptr+$ff*8,x
+	dex
+	bpl	@cf
 	memoryconfig_io
 	lda	$d011		; Save control register
 	pha
@@ -82,6 +89,9 @@ wavyinterlude:
 	jsr	wavymation_animate_font
 	dec	wavecounter
 	bpl	@loop
+	lda	#$ff
+	jsr	fill_screenram
+	jmp *
 	sei
 	memoryconfig_io
 	pla
