@@ -63,8 +63,6 @@ wavyinterlude:
 	pha
 	memoryconfig_ram
 	cli		       ; Allow for an interrupt.
-	;; Clear the screen with a nice effect.
-	jsr	whiteout_whole_screen
 	jsr	wavymation_copy_font
 	jsr	setup_vic
 	inc	wavy_image_counter
@@ -91,7 +89,6 @@ wavyinterlude:
 	bpl	@loop
 	lda	#$ff
 	jsr	fill_screenram
-	jmp *
 	sei
 	memoryconfig_io
 	pla

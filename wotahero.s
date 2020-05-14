@@ -81,10 +81,6 @@ mainloop:
 	lda	#$4
 	.endif
 	jsr	wait_for_framecounter
-	jsr	wavyinterlude
-	jsr	reset_framecounter
-	jsr	wavyinterlude
-	jsr	reset_framecounter
 	;; 	jsr	interlude
 displayloop:
 	;; Spiral
@@ -97,10 +93,12 @@ displayloop:
 	jsr	wait_for_framecounter
 	;; LFSR
 	jsr	whiteout_via_lfsr
+	jsr	wavyinterlude
 	jsr	uncompress_next_image
 	cmp	#0
 	jeq	@end
 	jsr	colourin_via_lfsr
+	jsr	reset_framecounter
 	lda	#$2
 	jsr	wait_for_framecounter
 	lda	animate_sprite_sequence
@@ -108,10 +106,12 @@ displayloop:
 	sta	animate_sprite_sequence
 	;; vartical bars
 	jsr	whiteout_whole_screen
+	jsr	wavyinterlude
 	jsr	uncompress_next_image
 	cmp	#0
 	jeq	@end
 	jsr	colourin_whole_screen
+	jsr	reset_framecounter
 	lda	#$2
 	jsr	wait_for_framecounter
 	jmp	displayloop
