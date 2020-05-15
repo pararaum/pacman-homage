@@ -14,6 +14,7 @@
 	.import fill_colourram
 	.import fill_screenram
 	.import wait_single_frame
+	.import whiteout_horizontal
 
 	.data
 pacman:
@@ -87,8 +88,7 @@ wavyinterlude:
 	jsr	wavymation_animate_font
 	dec	wavecounter
 	bpl	@loop
-	lda	#$ff
-	jsr	fill_screenram
+	jsr	whiteout_horizontal
 	sei
 	memoryconfig_io
 	pla

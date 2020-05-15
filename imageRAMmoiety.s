@@ -1,5 +1,4 @@
 
-	.segment "IMAGE"
 	.export	sprites
 	.export	spritescroller
 	.export	imagecolours
@@ -17,6 +16,7 @@
 	.export screen0
 	.export fill_screenram
 	.export	fill_colourram
+	.export whiteout_horizontal
 
 	.macpack	generic
 	.import	wait_single_frame
@@ -588,4 +588,43 @@ fill_colourram:
 	sta	$db00,x
 	dex
 	bne	@l
+	rts
+
+;;; Fill screen4col with the whiteout colour by producing horizontal "blinds" going from top to bottom and from bottom to top.
+;;; Modifies: A/X/Y
+whiteout_horizontal:
+	lda	#<screen4col
+	sta	@ptr1
+	lda	#>screen4col
+	sta	@ptr1+1
+	lda	#<(screen4col+23*40)
+	sta	@ptr2
+	lda	#>(screen4col+23*40)
+	sta	@ptr2+1
+	ldy	#24/2-1		; 24 lines, from top and from bottom.
+@l2:
+	lda	whiteout_colour	; Get colour to write
+	ldx	#40-1		; 40 characters per line
+@l1:
+	sta	screen4col,x	; Write into screen ram (top).
+	@ptr1 = *-2
+	sta	screen4col+23*40,x ; Write into screen ram (bottom).
+	@ptr2 = *-2
+	dex
+	bpl	@l1		; Line finished?
+	jsr	wait_single_frame
+	lda	#80		; Next line.
+	add	@ptr1
+	sta	@ptr1
+	bcc	@s1
+	inc	@ptr1+1
+@s1:
+	lda	@ptr2
+	sub	#80		; Previous line.
+	sta	@ptr2
+	bcs	@s2
+	dec	@ptr2+1
+@s2:
+	dey			; All lines?
+	bpl	@l2
 	rts

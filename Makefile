@@ -39,4 +39,4 @@ debug:
 crunch:	wotahero
 	./pucrunch/pucrunch -x '$$3fc' wotahero wotahero.prg
 
-.PHONY:	wotahero clean crunch debug run
+.PHONY:	clean crunch debug run

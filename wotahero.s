@@ -28,7 +28,7 @@
 	.import	fill_screenram
 	.import wavyinterlude
 	.import	sidMuzakInit
-
+	.import whiteout_horizontal
 
 	.export _main
 
