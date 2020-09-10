@@ -88,7 +88,7 @@ displayloop:
 	jsr	whiteout_spiral
 	jsr	uncompress_next_image
 	cmp	#0
-	jeq	@end
+	jeq	end_of_mainloop
 	jsr	colourin_spiral
 	lda	#$2
 	jsr	wait_for_framecounter
@@ -97,7 +97,7 @@ displayloop:
 	jsr	wavyinterlude
 	jsr	uncompress_next_image
 	cmp	#0
-	jeq	@end
+	jeq	end_of_mainloop
 	jsr	colourin_via_lfsr
 	jsr	reset_framecounter
 	lda	#$2
@@ -110,13 +110,13 @@ displayloop:
 	jsr	wavyinterlude
 	jsr	uncompress_next_image
 	cmp	#0
-	jeq	@end
+	jeq	end_of_mainloop
 	jsr	colourin_whole_screen
 	jsr	reset_framecounter
 	lda	#$2
 	jsr	wait_for_framecounter
 	jmp	displayloop
-@end:	;;
+end_of_mainloop:	;;
 	rts
 
 
