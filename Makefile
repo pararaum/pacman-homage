@@ -6,7 +6,7 @@ AINC = -I includeCC65
 OBJS = wotahero.o muzak.o unpucrunch.o startup.o imagemoiety.o spritemoiety.o imageRAMmoiety.o tools.o bss.o ciatimer.o irqmoiety.o scrollermoiety.o image_clear_even_odd.o globalzeropage.o whiteout_spiral.o trigonometric.o animationfont.o wavymoiety.o
 #TMPFILE := $(shell mktemp)
 
-all:	images wotahero test1.pucrunch putest
+all:	images wotahero
 
 %.o:	%.s
 	ca65 $(AINC) $(AFLAGS) $+
@@ -17,7 +17,7 @@ wotahero:	$(OBJS)
 test1.pucrunch:
 	echo -n "AAAAABRACADABRABRAAAAA" | ./pucrunch/pucrunch -d -l 0x400 > $@
 
-putest:	unpucrunch.o putest.o
+putest:	test1.pucrunch unpucrunch.o putest.o
 	cl65 -v -t c64 -o $@ $+
 
 # (format "%04X" 54272)"D400"
