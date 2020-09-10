@@ -28,8 +28,11 @@ irqYsave:	.byte 0
 irqTableLO:	.lobytes	IrqsTable
 irqTableHI:	.hibytes	IrqsTable
 irqTable_pos:	.byte	40,105,201,248
+
+	.bss
 irq_dispatch_idx:		; Index to the next interrupt routine.
-	.byte	0
+	;; 	.byte	0
+	.res	1
 
 	.code
 ;;; Setup the interrupt routine by copying the code and setting the IRQ pointer. The interupt must point to an address of $ff?? as we need a black border (top and bottom).
