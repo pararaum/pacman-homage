@@ -85,7 +85,6 @@ run_action:
 	rts
 
 play_muzak:
-	P_inc	framecounter	; Advance frame counter.
 	memoryconfig_io
 	jsr	ciatimer_store
 	jsr	sidMuzakPlay
@@ -134,6 +133,7 @@ irq_advance_scroller:
 	lda	#$0
 	sta	$d015
 	memoryconfig_ram
+	P_inc	framecounter	; Advance frame counter.
 	rts
 
 	.code
