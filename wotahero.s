@@ -104,6 +104,15 @@ displayloop:
 	;; vartical bars
 	out_in_step	whiteout_whole_screen,colourin_whole_screen
 	;; 	jsr	wavyinterlude
+	jsr	whiteout_via_lfsr     ; ⎞
+	jsr	wavyinterlude	      ; ⎟
+	jsr	uncompress_next_image ; ⎟
+	cmp	#0		      ; ⎟
+	jeq	end_of_mainloop	      ; ⎬ Show the interlude.
+	jsr	colourin_via_lfsr     ; ⎟
+	jsr	reset_framecounter    ; ⎟
+	lda	#2		      ; ⎟
+	jsr	wait_for_framecounter ; ⎠
 	jmp	displayloop
 end_of_mainloop:	;;
 	rts
