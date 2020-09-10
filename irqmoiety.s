@@ -74,6 +74,7 @@ setupirq:
 	rts
 
 run_action:
+	P_inc	framecounter	; Advance frame counter.
 	jsr	animate_sprite
 	memoryconfig_io
 	;; 	jsr	move_sprite0_horizontally
@@ -133,7 +134,6 @@ irq_advance_scroller:
 	lda	#$0
 	sta	$d015
 	memoryconfig_ram
-	P_inc	framecounter	; Advance frame counter.
 	rts
 
 	.code
