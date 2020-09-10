@@ -40,6 +40,15 @@ srcend:	.word	0
 tmpptr:	.word	0
 counter16:	.word 0
 
+	.macro	out_in_step woutfun,cinfun
+	jsr	woutfun
+	jsr	uncompress_next_image
+	cmp	#0
+	jeq	end_of_mainloop
+	jsr	cinfun
+	lda	#2
+	jsr	wait_for_framecounter
+	.endmacro
 
 	.data
 	.asciiz	"Data Segment"
@@ -82,39 +91,19 @@ mainloop:
 	lda	#$4
 	.endif
 	jsr	wait_for_framecounter
-	jsr	interlude
+	;; 	jsr	interlude
 displayloop:
 	;; Spiral
-	jsr	whiteout_spiral
-	jsr	uncompress_next_image
-	cmp	#0
-	jeq	end_of_mainloop
-	jsr	colourin_spiral
-	lda	#$2
-	jsr	wait_for_framecounter
+	out_in_step	whiteout_spiral,colourin_spiral
 	;; LFSR
-	jsr	whiteout_via_lfsr
-	jsr	wavyinterlude
-	jsr	uncompress_next_image
-	cmp	#0
-	jeq	end_of_mainloop
-	jsr	colourin_via_lfsr
-	jsr	reset_framecounter
-	lda	#$2
-	jsr	wait_for_framecounter
+	out_in_step	whiteout_via_lfsr,colourin_via_lfsr
+	;; 	jsr	wavyinterlude
 	lda	animate_sprite_sequence
 	eor	#1
 	sta	animate_sprite_sequence
 	;; vartical bars
-	jsr	whiteout_whole_screen
-	jsr	wavyinterlude
-	jsr	uncompress_next_image
-	cmp	#0
-	jeq	end_of_mainloop
-	jsr	colourin_whole_screen
-	jsr	reset_framecounter
-	lda	#$2
-	jsr	wait_for_framecounter
+	out_in_step	whiteout_whole_screen,colourin_whole_screen
+	;; 	jsr	wavyinterlude
 	jmp	displayloop
 end_of_mainloop:	;;
 	rts
