@@ -12,7 +12,7 @@ all:	images wotahero
 	ca65 $(AINC) $(AFLAGS) $+
 
 wotahero:	$(OBJS)
-	cl65 $(CFLAGS) -v -m wotahero.map -Ln wotahero.vicelabel -C wotahero.cfg $+
+	cl65 $(CFLAGS) -v -m wotahero.map -Ln wotahero.label -C wotahero.cfg $+
 
 test1.pucrunch:
 	echo -n "AAAAABRACADABRABRAAAAA" | ./pucrunch/pucrunch -d -l 0x400 > $@
@@ -28,7 +28,7 @@ images:	story.008008.pucr story.008150.pucr story.008298.pucr story.0083e0.pucr 
 
 
 clean:
-	rm -f wotahero wotahero.prg wotahero.map wotahero.vicelabel putest *.o *.pucr
+	rm -f wotahero wotahero.prg wotahero.map wotahero.label putest *.o *.pucr
 
 run:	wotahero
 	@echo  '\nbank ram \nl "wotahero" 0 \ng 03FC\n' | nc -N localhost 6510
