@@ -15,7 +15,7 @@
 
 	.export uncompress_next_image
 
-	.data
+	.rodata
 image_cr_story00:
 	.incbin	"story.008008.pucr",2
 image_cr_story01:
