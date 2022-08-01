@@ -16,17 +16,18 @@
 
 	.data
 scroller_text:
-	scrcode	"vINTAGE cOMPUTING cARINTHIA PRESENTS 'wOT a hERO!', AN HOMAGE TO THE GAME pAC-mAN. tHIS GAME WAS DESIGNED IN 1980 BY tORU iWATANI! tHANK YOU FOR COUNTLESS HOURS OF FUN!"
+	scrcode	"vINTAGE cOMPUTING cARINTHIA PRESENTS 'wOT a hERO!' (BASED ON AN OLD IDEA FOUND IN THE ATTIC OF tHE 7TH dIVISION). "
+	scrcode "iT IS AN HOMAGE TO THE GAME pAC-mAN. tHIS GAME WAS DESIGNED IN 1980 BY tORU iWATANI! tHANK YOU FOR COUNTLESS HOURS OF FUN! "
 	.BYTE	"   "
 	scrcode "gREETINGS GO TO: "
         scrcode "aBYSS cONNECTION, aTLANTIS, "
         scrcode "bLAZON, cLASSIC vIDEOGAMES rADIO, "
         scrcode "cOMMODORE tREFFEN gRAZ, cOSMOS dESIGNS, "
-        scrcode "cOYHOT, dELYSID, dIGITAL tALK tEAM, doc.k, "
+        scrcode "cOYHOT, dELYSID, dIGITAL tALK tEAM, doc.k, dOCTORcpc, "
         scrcode "eXCESS, fAIRLIGHT, gLOEGG, "
         scrcode "hAREKIET, hOKUTO fORCE, "
         scrcode "jASMIN68K, jOE, jOK, nODEPOND, pADUA, "
-        scrcode "pHIWA, pINKAMENA, rABENAUGE, rEBELS, sISSIM, "
+        scrcode "pHIWA, pINKAMENA, rABENAUGE, rEBELS, sENSENSTAHL, sISSIM, "
         scrcode "tHE sOLUTION, tRIAD, wIZBALL6502, xxx"
 	.BYTE	".               "
 	.byte	$ff
