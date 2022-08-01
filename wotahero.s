@@ -29,6 +29,7 @@
 	.import wavyinterlude
 	.import	sidMuzakInit
 	.import whiteout_horizontal
+	.import colourin_horizontal
 	.import interlude
 
 	.export _main
@@ -88,22 +89,30 @@ mainloop:
 	.ifdef	DEBUG
 	lda	#$1
 	.else
-	lda	#$4
+	lda	#$3
 	.endif
 	jsr	wait_for_framecounter
 	;; 	jsr	interlude
 displayloop:
+	.ifdef	NDEBUG
 	;; Spiral
 	out_in_step	whiteout_spiral,colourin_spiral
 	;; LFSR
 	out_in_step	whiteout_via_lfsr,colourin_via_lfsr
-	;; 	jsr	wavyinterlude
+	;; Change sprite
 	lda	animate_sprite_sequence
 	eor	#1
 	sta	animate_sprite_sequence
 	;; vartical bars
 	out_in_step	whiteout_whole_screen,colourin_whole_screen
-	;; 	jsr	wavyinterlude
+	;; horizontal blinds
+	out_in_step	whiteout_horizontal,colourin_horizontal
+	.endif
+	;; Change sprite
+	lda	animate_sprite_sequence
+	eor	#1
+	sta	animate_sprite_sequence
+	;; And now do the wavy effect!
 	jsr	whiteout_via_lfsr     ; ⎞
 	jsr	wavyinterlude	      ; ⎟
 	jsr	uncompress_next_image ; ⎟
