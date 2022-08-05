@@ -1,6 +1,4 @@
 
-	.export	setupirq
-
 	.include	"pseudo16.inc"
 	.include	"memoryconfig.i"
 	.import ciatimer_retrieve
@@ -15,9 +13,32 @@
 	.import	circular_flight_spr0
 	.import sidMuzakPlay
 
+	.export	setupirq
+	.export disable_irq_sprite
+
 	;; Here we put the interrupt code. High byte must be $ff. See setupirq!
 	interruptTargetSpace = $FF80
-	
+
+	.proc run_action
+	P_inc	framecounter	; Advance frame counter.
+	jsr	animate_sprite
+	memoryconfig_io
+	;; 	jsr	move_sprite0_horizontally
+	jsr	circular_flight_spr0
+	lda	#7
+	sta	$d027
+	lda	#$ff
+	sprite_display_byte = *-1
+	sta	$d015
+	rts
+	.endproc
+
+	.code
+disable_irq_sprite:
+	lda	#0
+	sta	run_action::	sprite_display_byte
+	rts
+
 	.zeropage
 irqXsave:	.byte 0
 irqYsave:	.byte 0
@@ -74,18 +95,6 @@ setupirq:
 	; Bits 4-7:  Not used
 	lda	#%00000001
 	sta	$d01a
-	rts
-
-run_action:
-	P_inc	framecounter	; Advance frame counter.
-	jsr	animate_sprite
-	memoryconfig_io
-	;; 	jsr	move_sprite0_horizontally
-	jsr	circular_flight_spr0
-	lda	#7
-	sta	$d027
-	lda	#$ff
-	sta	$d015
 	rts
 
 play_muzak:

@@ -31,6 +31,7 @@
 	.import whiteout_horizontal
 	.import colourin_horizontal
 	.import interlude
+	.import disable_irq_sprite
 
 	.export _main
 
@@ -124,6 +125,12 @@ displayloop:
 	jsr	wait_for_framecounter ; ⎠
 	jmp	displayloop
 end_of_mainloop:	;;
+	jsr	disable_irq_sprite
+	ldy	#61
+@final_loop:
+	jsr	wait_single_frame
+	dey
+	bne	@final_loop
 	rts
 
 
